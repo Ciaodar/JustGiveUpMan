@@ -5,28 +5,33 @@
   <strings>
     <!-- Config -->
     <string id="jgum_test_msg" text="Just Give Up Man Doğru Bir Şekilde Yüklendi.!" />
-    <string id="jgum_surrender_offer_count" text="3" />
-    <string id="jgum_surrender_accept_count" text="2" />
-    <string id="jgum_surrender_reject_count" text="2" />
+    <string id="jgum_siege_surrender_offer_count" text="3" />
+    <string id="jgum_siege_surrender_accept_count" text="2" />
+    <string id="jgum_siege_surrender_reject_count" text="2" />
 
     <!-- Siege Surrender Dialogs -->
-    <string id="jgum_surrender_offer_1" text="YETER! Açlıktan köpük kusuyoruz. Şehir senindir." />
-    <string id="jgum_surrender_offer_2" text="Daha fazla dayanamayacağız. Lütfen merhamet et, kale senindir." />
-    <string id="jgum_surrender_offer_3" text="Askerlerim isyanın eşiğinde, yiyecek kalmadı. Teslim oluyoruz." />
+    <string id="jgum_siege_defender_greeting" text="Gelmeniz için teşekkürler lordum." />
+    <string id="jgum_siege_player_siege_surrender_offer" text="Durumunuzun ciddi olduğunu görüyorum. Teslim olmak ve halkınızı daha fazla acı çekmekten kurtarmak ister misiniz?" />
+    <string id="jgum_siege_surrender_offer_1" text="Haklısınız lordum! Açlıktan köpük kusuyoruz. Kale senindir. Bırak bizi lütfen." />
+    <string id="jgum_siege_surrender_offer_2" text="Daha fazla dayanamayacağız. Lütfen merhamet et, kale senindir. Yeter ki bizi salıver" />
+    <string id="jgum_siege_surrender_offer_3" text="Askerler isyanın eşiğinde, yiyecek kalmadı. Teslim oluyoruz. Bırak bizi gidelim kale de senin olsun!" />
 
     <!-- Accept -->
-    <string id="jgum_surrender_accept_1" text="Sizi açlıktan kurtaran yeni efendiniz olarak merhamet ediyorum." />
-    <string id="jgum_surrender_accept_2" text="Akıllılık ettiniz. Silahlarınızı bırakın, canınızı bağışlıyorum." />
+    <string id="jgum_siege_defender_accepted" text="Merhametinize minnettarız lordum." />
+    <string id="jgum_siege_surrender_accept_1" text="Sizi açlıktan kurtaran yeni efendiniz olarak merhamet ediyorum." />
+    <string id="jgum_siege_surrender_accept_2" text="Akıllılık ettiniz. Silahlarınızı bırakın, canınızı bağışlıyorum." />
 
     <!-- Reject -->
-    <string id="jgum_surrender_reject_1" text="Bakalım aç karnına savaşabiliyor musunuz?" />
-    <string id="jgum_surrender_reject_2" text="Merhamet dilenmek için çok geç. Sizi ezmeye geliyorum." />
+    <string id="jgum_siege_defender_rejected" text="Kalradya bu zulmü unutmayacaktır!" />
+    <string id="jgum_siege_surrender_reject_1" text="Bakalım aç karnına savaşabiliyor musunuz?" />
+    <string id="jgum_siege_surrender_reject_2" text="Merhamet dilenmek için çok geç. Sizi ezmeye geliyorum." />
 
     <!-- UI Strings -->
-    <string id="jgum_surrender_notification" text="{SETTLEMENT_NAME} kalesi komutanı teslim olmayı görüşmek istiyor." />
-    <string id="jgum_inquiry_title" text="Teslimiyet Teklifi" />
-    <string id="jgum_inquiry_accept" text="Görüşmeyi Kabul Et" />
-    <string id="jgum_inquiry_reject" text="Reddet (Kuşatmaya Devam)" />
+    <string id="jgum_siege_surrender_notification" text="{SETTLEMENT_NAME} kalesi komutanı teslim olmayı görüşmek istiyor." />
+    <string id="jgum_siege_inquiry_title" text="Teslimiyet Teklifi" />
+    <string id="jgum_siege_inquiry_accept" text="Görüşmeyi Kabul Et" />
+    <string id="jgum_siege_inquiry_reject" text="Reddet " />
+    <string id="jgum_siege_inquiry_reject" text="Reddet (Kuşatmaya Devam)" />
 
     <!-- Settings -->
     <string id="JGUM.Settings.GeneralSettings.Name" text="Genel Ayarlar" />

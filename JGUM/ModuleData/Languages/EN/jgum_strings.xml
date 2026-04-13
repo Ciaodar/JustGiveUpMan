@@ -5,28 +5,32 @@
   <strings>
     <!-- Config -->
     <string id="jgum_test_msg" text="Just Give Up Man Loaded Successfully.!" />
-    <string id="jgum_surrender_offer_count" text="3" />
-    <string id="jgum_surrender_accept_count" text="2" />
-    <string id="jgum_surrender_reject_count" text="2" />
+    <string id="jgum_siege_surrender_offer_count" text="3" />
+    <string id="jgum_siege_surrender_accept_count" text="2" />
+    <string id="jgum_siege_surrender_reject_count" text="2" />
 
     <!-- Siege Surrender Dialogs -->
-    <string id="jgum_surrender_offer_1" text="ENOUGH! We are starving to death. The city is yours." />
-    <string id="jgum_surrender_offer_2" text="We can't hold on any longer. Please have mercy, the castle is yours." />
-    <string id="jgum_surrender_offer_3" text="My soldiers are on the verge of mutiny, there is no food left. We surrender." />
+    <string id="jgum_siege_defender_greeting" text="Thank you for coming, My lord." />
+    <string id="jgum_siege_player_siege_surrender_offer" text="I see your situation is dire. Do you want to surrender and spare your people from further suffering?" />
+    <string id="jgum_siege_surrender_offer_1" text="We are starving to death. The city is yours." />
+    <string id="jgum_siege_surrender_offer_2" text="We can't hold on any longer. Please have mercy, the castle is yours." />
+    <string id="jgum_siege_surrender_offer_3" text="The soldiers are on the verge of mutiny, there is no food left. We surrender." />
 
     <!-- Accept -->
-    <string id="jgum_surrender_accept_1" text="As your new lord who saves you from starvation, I grant you mercy." />
-    <string id="jgum_surrender_accept_2" text="You made a wise choice. Lay down your arms, I spare your lives." />
+    <string id="jgum_siege_defender_accepted" text="We are grateful for your mercy!" />
+    <string id="jgum_siege_surrender_accept_1" text="As your new lord who saves you from starvation, I grant you mercy." />
+    <string id="jgum_siege_surrender_accept_2" text="You made a wise choice. Lay down your arms, I spare your lives." />
 
     <!-- Reject -->
-    <string id="jgum_surrender_reject_1" text="Let's see if you can fight on an empty stomach." />
-    <string id="jgum_surrender_reject_2" text="It is too late to beg for mercy. I am coming to crush you." />
+    <string id="jgum_siege_defender_rejected" text="Kalradia will remember this cruelty!" />
+    <string id="jgum_siege_surrender_reject_1" text="Let's see if you can fight on an empty stomach." />
+    <string id="jgum_siege_surrender_reject_2" text="It is too late to beg for mercy. I am coming to crush you." />
 
     <!-- UI Strings -->
-    <string id="jgum_surrender_notification" text="The commander of {SETTLEMENT_NAME} wants to discuss surrender." />
-    <string id="jgum_inquiry_title" text="Surrender Offer" />
-    <string id="jgum_inquiry_accept" text="Accept the meeting" />
-    <string id="jgum_inquiry_reject" text="Reject (Continue Siege)" />
+    <string id="jgum_siege_surrender_notification" text="{SETTLEMENT_NAME} wants to negotiate surrender with you." />
+    <string id="jgum_siege_inquiry_title" text="Surrender Negotiation" />
+    <string id="jgum_siege_inquiry_accept" text="Accept Meeting" />
+    <string id="jgum_siege_inquiry_reject" text="Reject Offer" />
 
     <!-- Settings -->
     <string id="JGUM.Settings.GeneralSettings.Name" text="General Settings" />
