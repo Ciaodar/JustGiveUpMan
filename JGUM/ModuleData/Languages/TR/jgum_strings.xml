@@ -27,5 +27,22 @@
     <string id="jgum_inquiry_title" text="Teslimiyet Teklifi" />
     <string id="jgum_inquiry_accept" text="Görüşmeyi Kabul Et" />
     <string id="jgum_inquiry_reject" text="Reddet (Kuşatmaya Devam)" />
+
+    <!-- Settings -->
+    <string id="JGUM.Settings.GeneralSettings.Name" text="Genel Ayarlar" />
+    <string id="JGUM.Settings.SurrenderTendencyMultiplier.Name" text="Genel Teslim Eğilimi" />
+    <string id="JGUM.Settings.SurrenderTendencyMultiplier.Hint" text="Teslim olma şansının genel çarpanı. Daha yüksek değerler teslimiyetleri daha olası kılar." />
+    <string id="JGUM.Settings.BaseSurrenderThreshold.Name" text="Temel Teslim Eşiği" />
+    <string id="JGUM.Settings.BaseSurrenderThreshold.Hint" text="Teslim hesabı için temel değer. Daha yüksek değerler teslimiyetleri daha az olası kılar. Varsayılan 2.5." />
+    <string id="JGUM.Settings.PlayerMercyMultiplier.Name" text="Oyuncu Merhamet Çarpanı" />
+    <string id="JGUM.Settings.PlayerMercyMultiplier.Hint" text="Oyuncunun Merhamet/Zalimlik özelliği etkisi için çarpan. Varsayılan 100. 0 devre dışı bırakır. 200 iki katına çıkarır." />
+    <string id="JGUM.Settings.LordCalculatingMultiplier.Name" text="Hesapçı Özellik Çarpanı" />
+    <string id="JGUM.Settings.LordCalculatingMultiplier.Hint" text="Savunan lordların 'Hesapçı' özelliği için çarpan. Varsayılan 100." />
+    <string id="JGUM.Settings.LordValorMultiplier.Name" text="Cesaret Özelliği Çarpanı" />
+    <string id="JGUM.Settings.LordValorMultiplier.Hint" text="Savunan lordların 'Cesaret' özelliği için çarpan. Varsayılan 100." />
+    <string id="JGUM.Settings.LordMercyMultiplier.Name" text="Merhamet Özelliği Çarpanı" />
+    <string id="JGUM.Settings.LordMercyMultiplier.Hint" text="Savunan lordların 'Merhamet' özelliği için çarpan. Varsayılan 100." />
+    <string id="JGUM.Settings.LordHonorMultiplier.Name" text="Şeref Özelliği Çarpanı" />
+    <string id="JGUM.Settings.LordHonorMultiplier.Hint" text="Savunan lordların 'Şeref' özelliği için çarpan. Varsayılan 100." />
   </strings>
 </base>

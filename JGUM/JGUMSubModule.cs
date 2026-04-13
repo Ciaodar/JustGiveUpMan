@@ -3,6 +3,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
+using JGUM.Config; // JGUMSettings'e erişim için eklendi
 
 namespace JGUM
 {
@@ -21,6 +22,10 @@ namespace JGUM
             TextObject testText = new TextObject("{=jgum_test_msg}JGUM Translate Error");
             
             InformationManager.DisplayMessage(new InformationMessage(testText.ToString(), Colors.Red));
+
+            // MCM ayarlarının yüklendiğinden emin olmak için Instance'a erişim.
+            // MCM, AttributeGlobalSettings'i otomatik olarak yükler, bu sadece bir kontrol.
+            _ = JGUMSettings.Instance;
         }
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)

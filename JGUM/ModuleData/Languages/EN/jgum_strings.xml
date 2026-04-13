@@ -27,5 +27,22 @@
     <string id="jgum_inquiry_title" text="Surrender Offer" />
     <string id="jgum_inquiry_accept" text="Accept the meeting" />
     <string id="jgum_inquiry_reject" text="Reject (Continue Siege)" />
+
+    <!-- Settings -->
+    <string id="JGUM.Settings.GeneralSettings.Name" text="General Settings" />
+    <string id="JGUM.Settings.SurrenderTendencyMultiplier.Name" text="General Surrender Tendency" />
+    <string id="JGUM.Settings.SurrenderTendencyMultiplier.Hint" text="Overall multiplier for the surrender chance. Higher values make surrenders more likely." />
+    <string id="JGUM.Settings.BaseSurrenderThreshold.Name" text="Base Surrender Threshold" />
+    <string id="JGUM.Settings.BaseSurrenderThreshold.Hint" text="Base value for the surrender calculation. Higher values make surrenders less likely. Default is 2.5." />
+    <string id="JGUM.Settings.PlayerMercyMultiplier.Name" text="Player Mercy Multiplier" />
+    <string id="JGUM.Settings.PlayerMercyMultiplier.Hint" text="Multiplier for the player's Mercy/Cruelty trait effect. 100 is default. 0 disables it. 200 doubles it." />
+    <string id="JGUM.Settings.LordCalculatingMultiplier.Name" text="Calculating Trait Multiplier" />
+    <string id="JGUM.Settings.LordCalculatingMultiplier.Hint" text="Multiplier for the defending lords' 'Calculating' trait. 100 is default." />
+    <string id="JGUM.Settings.LordValorMultiplier.Name" text="Valor Trait Multiplier" />
+    <string id="JGUM.Settings.LordValorMultiplier.Hint" text="Multiplier for the defending lords' 'Valor' trait. 100 is default." />
+    <string id="JGUM.Settings.LordMercyMultiplier.Name" text="Mercy Trait Multiplier" />
+    <string id="JGUM.Settings.LordMercyMultiplier.Hint" text="Multiplier for the defending lords' 'Mercy' trait. 100 is default." />
+    <string id="JGUM.Settings.LordHonorMultiplier.Name" text="Honor Trait Multiplier" />
+    <string id="JGUM.Settings.LordHonorMultiplier.Hint" text="Multiplier for the defending lords' 'Honor' trait. 100 is default." />
   </strings>
 </base>

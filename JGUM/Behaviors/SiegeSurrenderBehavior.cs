@@ -90,7 +90,7 @@ namespace JGUM.Behaviors
             if (!settlement.IsUnderSiege || SurrenderDialogContext.IsInSurrenderConversation)
                 return;
 
-            if (_calculator.ShouldSettlementSurrender(settlement, JGUMSettings.SurrenderTendencyMultiplier))
+            if (_calculator.ShouldSettlementSurrender(settlement, JGUMSettings.Instance.SurrenderTendencyMultiplier))
             {
                 var playerParty = MobileParty.MainParty;
                 if (settlement.SiegeEvent?.BesiegerCamp.HasInvolvedPartyForEventType(playerParty.Party) == true)
