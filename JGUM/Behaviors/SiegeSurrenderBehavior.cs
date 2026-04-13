@@ -44,29 +44,25 @@ namespace JGUM.Behaviors
         private void AddDialogs(CampaignGameStarter starter)
         {
             starter.AddDialogLine("jgum_defender_surrender_start", "start", "jgum_player_surrender_response",
-                GetSurrenderOfferText().ToString(),
+                StringBringCalculator.GetRandomText("jgum_surrender_offer").ToString() + "ENOUGH! We are starving to death. The city is yours.",
                 SurrenderCondition,
                 null,
                 9999
             );
 
             starter.AddPlayerLine("jgum_player_accepts_surrender", "jgum_player_surrender_response", "close_window",
-                GetAcceptText().ToString(),
+                StringBringCalculator.GetRandomText("jgum_surrender_accept").ToString() + "You made a wise choice. Lay down your arms, I spare your lives.",
                 PlayerResponseCondition,
                 AcceptSurrender
             );
 
             starter.AddPlayerLine("jgum_player_rejects_surrender", "jgum_player_surrender_response", "close_window",
-                GetRejectText().ToString(),
+                StringBringCalculator.GetRandomText("jgum_surrender_reject").ToString() + "It is too late to beg for mercy. I am coming to crush you.",
                 PlayerResponseCondition,
                 RejectSurrender
             );
         }
-
-        private TextObject GetSurrenderOfferText() => new TextObject(StringBringCalculator.GetRandomStringId("jgum_surrender_offer"));
-        private TextObject GetAcceptText() => new TextObject(StringBringCalculator.GetRandomStringId("jgum_surrender_accept"));
-        private TextObject GetRejectText() => new TextObject(StringBringCalculator.GetRandomStringId("jgum_surrender_reject"));
-
+        
         private bool SurrenderCondition()
         {
             if (!SurrenderDialogContext.IsInSurrenderConversation)
