@@ -44,20 +44,24 @@ namespace JGUM.Behaviors
         private void AddDialogs(CampaignGameStarter starter)
         {
             starter.AddDialogLine("jgum_defender_surrender_start", "start", "jgum_player_surrender_response",
-                StringBringCalculator.GetRandomText("jgum_surrender_offer").ToString() + "ENOUGH! We are starving to death. The city is yours.",
+                new TextObject(StringBringCalculator.GetRandomStringId("jgum_surrender_offer") 
+                                + "ENOUGH! We are starving to death. The city is yours.").ToString(),
                 SurrenderCondition,
                 null,
                 9999
             );
 
             starter.AddPlayerLine("jgum_player_accepts_surrender", "jgum_player_surrender_response", "close_window",
-                StringBringCalculator.GetRandomText("jgum_surrender_accept").ToString() + "You made a wise choice. Lay down your arms, I spare your lives.",
+                //StringBringCalculator.GetRandomStringId("jgum_surrender_accept") 
+                new TextObject(StringBringCalculator.GetRandomStringId("jgum_surrender_accept") 
+                               + "You made a wise choice. Lay down your arms, I spare your lives.").ToString(), 
                 PlayerResponseCondition,
                 AcceptSurrender
             );
 
             starter.AddPlayerLine("jgum_player_rejects_surrender", "jgum_player_surrender_response", "close_window",
-                StringBringCalculator.GetRandomText("jgum_surrender_reject").ToString() + "It is too late to beg for mercy. I am coming to crush you.",
+                new TextObject(StringBringCalculator.GetRandomStringId("jgum_surrender_reject") 
+                               + "It is too late to beg for mercy. I am coming to crush you.").ToString(),
                 PlayerResponseCondition,
                 RejectSurrender
             );
@@ -109,15 +113,15 @@ namespace JGUM.Behaviors
 
         private void StartSurrenderInquiry(Settlement settlement)
         {
-            var notificationText = new TextObject("{=jgum_surrender_notification}{SETTLEMENT_NAME}");
+            var notificationText = new TextObject("{=jgum_surrender_notification}{SETTLEMENT_NAME} wants to negotiate surrender with you.");
             notificationText.SetTextVariable("SETTLEMENT_NAME", settlement.Name);
 
             InformationManager.ShowInquiry(new InquiryData(
-                new TextObject("{=jgum_inquiry_title}").ToString(),
+                new TextObject("{=jgum_inquiry_title}Surrender Negotiation").ToString(),
                 notificationText.ToString(),
                 true, true,
-                new TextObject("{=jgum_inquiry_accept}").ToString(),
-                new TextObject("{=jgum_inquiry_reject}").ToString(),
+                new TextObject("{=jgum_inquiry_accept}Accept Meeting").ToString(),
+                new TextObject("{=jgum_inquiry_reject}Reject Offer").ToString(),
                 () => OnInquiryAccepted(settlement),
                 OnInquiryRejected
             ), true);

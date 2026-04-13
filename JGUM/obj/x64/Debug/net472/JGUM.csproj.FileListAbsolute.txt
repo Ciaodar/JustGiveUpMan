@@ -5,3 +5,4 @@ C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\bin\x64\Debug\net472\JGUM.dll
 C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\bin\x64\Debug\net472\JGUM.pdb
 C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\obj\x64\Debug\net472\JGUM.dll
 C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\obj\x64\Debug\net472\JGUM.pdb
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\obj\x64\Debug\net472\JGUM.sourcelink.json
