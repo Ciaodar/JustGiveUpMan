@@ -1,0 +1,6 @@
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\bin\Debug\JGUM.dll
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\bin\Debug\JGUM.pdb
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\obj\x64\Debug\JGUM.csproj.AssemblyReference.cache
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\obj\x64\Debug\JGUM.csproj.CoreCompileInputs.cache
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\obj\x64\Debug\JGUM.dll
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\obj\x64\Debug\JGUM.pdb
