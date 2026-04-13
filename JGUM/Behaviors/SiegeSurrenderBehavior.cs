@@ -44,8 +44,7 @@ namespace JGUM.Behaviors
         private void AddDialogs(CampaignGameStarter starter)
         {
             starter.AddDialogLine("jgum_defender_surrender_start", "start", "jgum_player_surrender_response",
-                new TextObject(StringBringCalculator.GetRandomStringId("jgum_surrender_offer") 
-                                + "ENOUGH! We are starving to death. The city is yours.").ToString(),
+                StringCalculator.GetString("jgum_surrender_offer","ENOUGH! We are starving to death. The city is yours."),
                 SurrenderCondition,
                 null,
                 9999
@@ -53,15 +52,13 @@ namespace JGUM.Behaviors
 
             starter.AddPlayerLine("jgum_player_accepts_surrender", "jgum_player_surrender_response", "close_window",
                 //StringBringCalculator.GetRandomStringId("jgum_surrender_accept") 
-                new TextObject(StringBringCalculator.GetRandomStringId("jgum_surrender_accept") 
-                               + "You made a wise choice. Lay down your arms, I spare your lives.").ToString(), 
+                StringCalculator.GetString("jgum_surrender_accept","You made a wise choice. Lay down your arms, I spare your lives."), 
                 PlayerResponseCondition,
                 AcceptSurrender
             );
 
             starter.AddPlayerLine("jgum_player_rejects_surrender", "jgum_player_surrender_response", "close_window",
-                new TextObject(StringBringCalculator.GetRandomStringId("jgum_surrender_reject") 
-                               + "It is too late to beg for mercy. I am coming to crush you.").ToString(),
+                StringCalculator.GetString("jgum_surrender_reject", "It is too late to beg for mercy. I am coming to crush you."),
                 PlayerResponseCondition,
                 RejectSurrender
             );
