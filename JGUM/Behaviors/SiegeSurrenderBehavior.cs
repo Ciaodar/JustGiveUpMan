@@ -43,24 +43,52 @@ namespace JGUM.Behaviors
 
         private void AddDialogs(CampaignGameStarter starter)
         {
-            starter.AddDialogLine("jgum_defender_surrender_start", "start", "jgum_player_surrender_response",
-                StringCalculator.GetString("jgum_surrender_offer","ENOUGH! We are starving to death. The city is yours."),
+            starter.AddDialogLine("jgum_siege_defender_start", "start", "jgum_player_start",
+                StringCalculator.GetString("jgum_siege_defender_greeting","Thank you for coming, My lord."),
                 SurrenderCondition,
-                null,
+                OnConversationRelationshipChanges(2),
                 9999
             );
+            // Player initiates surrender negotiation
+            starter.AddPlayerLine("jgum_siege_player_surrender_start", "jgum_player_start", "jgum_siege_defender_surrenders",
+                StringCalculator.GetString("jgum_siege_player_siege_surrender_offer","I see your situation is dire. Do you want to surrender and spare your people from further suffering?"),
+                SurrenderCondition,
+                null
+            );
+            
+            // Defender responds with surrender plea
+            starter.AddDialogLine("jgum_siege_defender_surrenders", "jgum_siege_defender_surrenders", "jgum_siege_player_surrender_response",
+                StringCalculator.GetString("jgum_siege_surrender_offer","We are starving to death. The city is yours."),
+                SurrenderCondition,
+                null
+            );
 
-            starter.AddPlayerLine("jgum_player_accepts_surrender", "jgum_player_surrender_response", "close_window",
-                //StringBringCalculator.GetRandomStringId("jgum_surrender_accept") 
-                StringCalculator.GetString("jgum_surrender_accept","You made a wise choice. Lay down your arms, I spare your lives."), 
+            // Player accepts surrender
+            starter.AddPlayerLine("jgum_siege_player_accepts_surrender", "jgum_siege_player_surrender_response", "jgum_siege_merciful",
+                StringCalculator.GetString("jgum_siege_surrender_accept","You made a wise choice. Lay down your arms, I spare your lives."), 
                 PlayerResponseCondition,
                 AcceptSurrender
             );
 
-            starter.AddPlayerLine("jgum_player_rejects_surrender", "jgum_player_surrender_response", "close_window",
-                StringCalculator.GetString("jgum_surrender_reject", "It is too late to beg for mercy. I am coming to crush you."),
+            // Player rejects surrender
+            starter.AddPlayerLine("jgum_siege_player_rejects_surrender", "jgum_siege_player_surrender_response", "jgum_siege_cruel",
+                StringCalculator.GetString("jgum_siege_surrender_reject", "It is too late to beg for mercy. I am coming to crush you."),
                 PlayerResponseCondition,
                 RejectSurrender
+            );
+            
+            // Merciful ending response
+            starter.AddDialogLine("jgum_siege_merciful", "jgum_siege_merciful", "close_window",
+                StringCalculator.GetString("jgum_siege_defender_accepted", "We are grateful for your mercy!"),
+                PlayerResponseCondition,
+                null
+            );
+            
+            // Cruel ending response
+            starter.AddDialogLine("jgum_siege_cruel", "jgum_siege_cruel", "close_window",
+                StringCalculator.GetString("jgum_siege_defender_rejected", "Kalradia will remember this cruelty!"),
+                PlayerResponseCondition,
+                null
             );
         }
         
@@ -110,20 +138,28 @@ namespace JGUM.Behaviors
 
         private void StartSurrenderInquiry(Settlement settlement)
         {
-            var notificationText = new TextObject("{=jgum_surrender_notification}{SETTLEMENT_NAME} wants to negotiate surrender with you.");
+            var notificationText = new TextObject("{=jgum_siege_surrender_notification}{SETTLEMENT_NAME} wants to negotiate surrender with you.");
             notificationText.SetTextVariable("SETTLEMENT_NAME", settlement.Name);
 
             InformationManager.ShowInquiry(new InquiryData(
-                new TextObject("{=jgum_inquiry_title}Surrender Negotiation").ToString(),
+                new TextObject("{=jgum_siege_inquiry_title}Surrender Negotiation").ToString(),
                 notificationText.ToString(),
                 true, true,
-                new TextObject("{=jgum_inquiry_accept}Accept Meeting").ToString(),
-                new TextObject("{=jgum_inquiry_reject}Reject Offer").ToString(),
+                new TextObject("{=jgum_siege_inquiry_accept}Accept Meeting").ToString(),
+                new TextObject("{=jgum_siege_inquiry_reject}Reject Offer").ToString(),
                 () => OnInquiryAccepted(settlement),
                 OnInquiryRejected
             ), true);
         }
 
+        private ConversationSentence.OnConsequenceDelegate? OnConversationRelationshipChanges(int change)
+        {
+            var currentConvHero = Campaign.Current.ConversationManager.OneToOneConversationHero;
+            if (currentConvHero != null)
+                Hero.MainHero.SetPersonalRelation(currentConvHero, (int)currentConvHero.GetRelationWithPlayer()+change);
+            return null;
+        }
+        
         private void OnInquiryAccepted(Settlement settlement)
         {
             CharacterObject? defenderCharacter =
@@ -159,7 +195,8 @@ namespace JGUM.Behaviors
 
             var besiegerLeader = siegeEvent.BesiegerCamp.LeaderParty?.LeaderHero;
             if (besiegerLeader == null) return;
-            
+
+            OnConversationRelationshipChanges(2);
             ChangeOwnerOfSettlementAction.ApplyBySiege(besiegerLeader, besiegerLeader, settlement);
             
             var currentMercy = Hero.MainHero.GetTraitLevel(DefaultTraits.Mercy);
@@ -175,6 +212,7 @@ namespace JGUM.Behaviors
 
         private void RejectSurrender()
         {
+            OnConversationRelationshipChanges(-2);
             var currentMercy = Hero.MainHero.GetTraitLevel(DefaultTraits.Mercy);
             if (currentMercy > -2)
                 Hero.MainHero.SetTraitLevel(DefaultTraits.Mercy, currentMercy - 1);
