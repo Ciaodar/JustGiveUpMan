@@ -8,9 +8,14 @@
     <string id="jgum_siege_surrender_offer_count" text="3" />
     <string id="jgum_siege_surrender_accept_count" text="2" />
     <string id="jgum_siege_surrender_reject_count" text="2" />
+    <string id="jgum_field_surrender_offer_count" text="1" />
+    <string id="jgum_field_surrender_accept_count" text="1" />
+    <string id="jgum_field_surrender_reject_count" text="1" />
 
+    
+    <!-- {?CONVERSATION_NPC.GENDER}madame{?}sir{\\?} -->
     <!-- Siege Surrender Dialogs -->
-    <string id="jgum_siege_defender_greeting" text="Thank you for coming, My lord." />
+    <string id="jgum_siege_defender_greeting" text="Thank you for coming, My {?CONVERSATION_NPC.GENDER}Lady{?}Lord{\\?}." />
     <string id="jgum_siege_player_siege_surrender_offer" text="I see your situation is dire. Do you want to surrender and spare your people from further suffering?" />
     <string id="jgum_siege_surrender_offer_1" text="We are starving to death. The city is yours." />
     <string id="jgum_siege_surrender_offer_2" text="We can't hold on any longer. Please have mercy, the castle is yours." />
@@ -26,6 +31,14 @@
     <string id="jgum_siege_surrender_reject_1" text="Let's see if you can fight on an empty stomach." />
     <string id="jgum_siege_surrender_reject_2" text="It is too late to beg for mercy. I am coming to crush you." />
 
+    <!-- Field Surrender Dialogs -->
+    <string id="jgum_field_surrender_offer_1" text="Lay down your arms and surrender! You are surrounded and outmatched." />
+    <string id="jgum_field_surrender_accept_1" text="We yield! Spare our lives and we will serve you." />
+    <string id="jgum_field_surrender_reject_1" text="Never! We will fight to the last man!" />
+    <string id="jgum_field_surrender_end" text="A wise choice. You shall be spared." />
+    <string id="jgum_field_surrender_success" text="Enemy forces have surrendered!" />
+    <string id="jgum_field_surrender_rejected" text="The battle continues!" />
+
     <!-- UI Strings -->
     <string id="jgum_siege_surrender_notification" text="{SETTLEMENT_NAME} wants to negotiate surrender with you." />
     <string id="jgum_siege_inquiry_title" text="Surrender Negotiation" />
@@ -33,7 +46,7 @@
     <string id="jgum_siege_inquiry_reject" text="Reject Offer" />
 
     <!-- Settings -->
-    <string id="JGUM.Settings.GeneralSettings.Name" text="General Settings" />
+    <string id="JGUM.Settings.SiegeSettings.Name" text="General Settings" />
     <string id="JGUM.Settings.SurrenderTendencyMultiplier.Name" text="General Surrender Tendency" />
     <string id="JGUM.Settings.SurrenderTendencyMultiplier.Hint" text="Overall multiplier for the surrender chance. Higher values make surrenders more likely." />
     <string id="JGUM.Settings.BaseSurrenderThreshold.Name" text="Base Surrender Threshold" />
@@ -48,5 +61,9 @@
     <string id="JGUM.Settings.LordMercyMultiplier.Hint" text="Multiplier for the defending lords' 'Mercy' trait. 100 is default." />
     <string id="JGUM.Settings.LordHonorMultiplier.Name" text="Honor Trait Multiplier" />
     <string id="JGUM.Settings.LordHonorMultiplier.Hint" text="Multiplier for the defending lords' 'Honor' trait. 100 is default." />
+    <string id="JGUM.Settings.NearbyEnemyLordStrengthPercentage.Name" text="Nearby Enemy Lord Strength (%)" />
+    <string id="JGUM.Settings.NearbyEnemyLordStrengthPercentage.Hint" text="Percentage of nearby enemy lord strength to add to defender power. Higher values make defenders see enemy lords as threatening. Default 50%." />
+    <string id="JGUM.Settings.NearbyEnemyLordDetectionRange.Name" text="Enemy Lord Detection Range" />
+    <string id="JGUM.Settings.NearbyEnemyLordDetectionRange.Hint" text="How far away (in map distance) to detect enemy lords gathering nearby. Default is 50." />
   </strings>
 </base>

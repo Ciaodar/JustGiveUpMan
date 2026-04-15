@@ -3,7 +3,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
-using JGUM.Config; // JGUMSettings'e erişim için eklendi
+using JGUM.Config; 
 
 namespace JGUM
 {
@@ -17,14 +17,12 @@ namespace JGUM
         {
             base.OnBeforeInitialModuleScreenSetAsRoot();
             
-            // Eğer XML çalışmıyorsa ekranda parantez içindeki varsayılan metin görünür.
-            // Çalışıyorsa XML'den çekeceği "BAŞARILI!" mesajı görünür.
+
             TextObject testText = new TextObject("{=jgum_test_msg}JGUM Translate Error");
             
             InformationManager.DisplayMessage(new InformationMessage(testText.ToString(), Colors.Red));
 
-            // MCM ayarlarının yüklendiğinden emin olmak için Instance'a erişim.
-            // MCM, AttributeGlobalSettings'i otomatik olarak yükler, bu sadece bir kontrol.
+            //MCM Check
             _ = JGUMSettings.Instance;
         }
 
@@ -36,8 +34,11 @@ namespace JGUM
             {
                 CampaignGameStarter campaignStarter = (CampaignGameStarter)gameStarterObject;
                 
-                // Behavior'ı (Game Loop'a denk gelen yapı) ekliyoruz.
+                // Add siege surrender behavior for settlements under siege.
                 campaignStarter.AddBehavior(new Behaviors.SiegeSurrenderBehavior());
+                
+                // Add lord encounter surrender behavior to intercept field lord conversations.
+                campaignStarter.AddBehavior(new Behaviors.LordEncounterSurrenderBehavior());
             }
         }
     }

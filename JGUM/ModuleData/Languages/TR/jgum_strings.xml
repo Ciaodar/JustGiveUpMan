@@ -8,6 +8,9 @@
     <string id="jgum_siege_surrender_offer_count" text="3" />
     <string id="jgum_siege_surrender_accept_count" text="2" />
     <string id="jgum_siege_surrender_reject_count" text="2" />
+    <string id="jgum_field_surrender_offer_count" text="1" />
+    <string id="jgum_field_surrender_accept_count" text="1" />
+    <string id="jgum_field_surrender_reject_count" text="1" />
 
     <!-- Siege Surrender Dialogs -->
     <string id="jgum_siege_defender_greeting" text="Gelmeniz için teşekkürler lordum." />
@@ -26,6 +29,14 @@
     <string id="jgum_siege_surrender_reject_1" text="Bakalım aç karnına savaşabiliyor musunuz?" />
     <string id="jgum_siege_surrender_reject_2" text="Merhamet dilenmek için çok geç. Sizi ezmeye geliyorum." />
 
+    <!-- Field Surrender Dialogs -->
+    <string id="jgum_field_surrender_offer_1" text="Silahlarınızı bırakın ve teslim olun! Çevrelenmişsiniz ve yenilmişsiniz." />
+    <string id="jgum_field_surrender_accept_1" text="Teslim oluyoruz! Canımızı bağışlarsan seni hizmetimizde bulacaksın." />
+    <string id="jgum_field_surrender_reject_1" text="Asla! Son nefesimize kadar savaşacağız!" />
+    <string id="jgum_field_surrender_end" text="Akıllı bir karar. Canın bağışlandı." />
+    <string id="jgum_field_surrender_success" text="Düşman kuvvetleri teslim oldu!" />
+    <string id="jgum_field_surrender_rejected" text="Savaş devam ediyor!" />
+
     <!-- UI Strings -->
     <string id="jgum_siege_surrender_notification" text="{SETTLEMENT_NAME} kalesi komutanı teslim olmayı görüşmek istiyor." />
     <string id="jgum_siege_inquiry_title" text="Teslimiyet Teklifi" />
@@ -34,7 +45,7 @@
     <string id="jgum_siege_inquiry_reject" text="Reddet (Kuşatmaya Devam)" />
 
     <!-- Settings -->
-    <string id="JGUM.Settings.GeneralSettings.Name" text="Genel Ayarlar" />
+    <string id="JGUM.Settings.SiegeSettings.Name" text="Genel Ayarlar" />
     <string id="JGUM.Settings.SurrenderTendencyMultiplier.Name" text="Genel Teslim Eğilimi" />
     <string id="JGUM.Settings.SurrenderTendencyMultiplier.Hint" text="Teslim olma şansının genel çarpanı. Daha yüksek değerler teslimiyetleri daha olası kılar." />
     <string id="JGUM.Settings.BaseSurrenderThreshold.Name" text="Temel Teslim Eşiği" />
@@ -49,5 +60,9 @@
     <string id="JGUM.Settings.LordMercyMultiplier.Hint" text="Savunan lordların 'Merhamet' özelliği için çarpan. Varsayılan 100." />
     <string id="JGUM.Settings.LordHonorMultiplier.Name" text="Şeref Özelliği Çarpanı" />
     <string id="JGUM.Settings.LordHonorMultiplier.Hint" text="Savunan lordların 'Şeref' özelliği için çarpan. Varsayılan 100." />
+    <string id="JGUM.Settings.NearbyEnemyLordStrengthPercentage.Name" text="Yakındaki Düşman Lord Gücünün Etkisi (%)" />
+    <string id="JGUM.Settings.NearbyEnemyLordStrengthPercentage.Hint" text="Yakındaki düşman lord gücünün kale savunucularının gücüne ekleme yüzdesi. Daha yüksek değerler savunucuların gücünü arttırır. Varsayılan %50." />
+    <string id="JGUM.Settings.NearbyEnemyLordDetectionRange.Name" text="Düşman Lord Algılama Aralığı" />
+    <string id="JGUM.Settings.NearbyEnemyLordDetectionRange.Hint" text="Yakında toplanan düşman lordları algılamak için ne kadar uzakta olabilecekleri (harita uzaklığında). Varsayılan 50." />
   </strings>
 </base>

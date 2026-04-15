@@ -43,6 +43,10 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Testing\" />
+  </ItemGroup>
+
   <!-- This target runs after the build is complete -->
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <PropertyGroup>

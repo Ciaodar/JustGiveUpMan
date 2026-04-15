@@ -22,11 +22,11 @@ namespace JGUM.Behaviors
 
     public class SiegeSurrenderBehavior : CampaignBehaviorBase
     {
-        private readonly SurrenderCalculator _calculator;
+        private readonly SiegeSurrenderCalculator _calculator;
 
         public SiegeSurrenderBehavior()
         {
-            _calculator = new SurrenderCalculator();
+            _calculator = new SiegeSurrenderCalculator();
         }
 
         public override void RegisterEvents()
@@ -118,7 +118,7 @@ namespace JGUM.Behaviors
             if (!settlement.IsUnderSiege || SurrenderDialogContext.IsInSurrenderConversation)
                 return;
 
-            if (_calculator.ShouldSettlementSurrender(settlement, JGUMSettings.Instance.SurrenderTendencyMultiplier))
+            if (_calculator.ShouldSettlementSurrender(settlement, JGUMSettings.Instance!.SurrenderTendencyMultiplier))
             {
                 var playerParty = MobileParty.MainParty;
                 if (settlement.SiegeEvent?.BesiegerCamp.HasInvolvedPartyForEventType(playerParty.Party) == true)
