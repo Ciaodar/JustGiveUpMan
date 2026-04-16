@@ -22,8 +22,8 @@ namespace JGUM
             
             InformationManager.DisplayMessage(new InformationMessage(testText.ToString(), Colors.Red));
 
-            //MCM Check
-            _ = JGUMSettings.Instance;
+            // Initialize config backend (MCM or JSON) once on module root screen.
+            JgumSettingsManager.Initialize();
         }
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)

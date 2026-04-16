@@ -4,8 +4,6 @@ using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using JGUM.Config;
-using TaleWorlds.CampaignSystem.Encounters;
-using TaleWorlds.CampaignSystem.Siege; // Added for accessing JGUMSettings
 
 namespace JGUM.Calculators
 {
@@ -45,10 +43,6 @@ namespace JGUM.Calculators
 
             float powerRatio = attackerPower / defenderPower;
 
-            // Morale calculation
-            var mobileAttackers = attackers.Where(p => p.MobileParty != null).ToList();
-            var mobileDefenders = defenders.Where(p => p.MobileParty != null).ToList();
-            
             // Lord count check:
             // 1. Count lords with MobileParty.
             // 2. Count lords without parties but present in the settlement (HeroesWithoutParty).
@@ -64,21 +58,21 @@ namespace JGUM.Calculators
 
             // Player's Mercy trait
             var player = Hero.MainHero;
-            traitEffect += (player.GetTraitLevel(DefaultTraits.Mercy) / 10f) * (JGUMSettings.Instance!.PlayerMercyMultiplier / 100f); // If Mercy/Cruelty is negative, it has negative effect.
+            traitEffect += (player.GetTraitLevel(DefaultTraits.Mercy) / 10f) * (JgumSettingsManager.PlayerMercyMultiplier / 100f); // If Mercy/Cruelty is negative, it has negative effect.
 
             // Traits of lords in the fortress
             foreach (var lord in defendingLords)
             {
-                traitEffect += (lord.GetTraitLevel(DefaultTraits.Calculating) / 20f) * (JGUMSettings.Instance.LordCalculatingMultiplier / 100f); // Calculating +
-                traitEffect -= (lord.GetTraitLevel(DefaultTraits.Valor) / 10f) * (JGUMSettings.Instance.LordValorMultiplier / 100f); // Valor -
-                traitEffect += (lord.GetTraitLevel(DefaultTraits.Mercy) / 20f) * (JGUMSettings.Instance.LordMercyMultiplier / 100f); // Mercy +
-                traitEffect -= (lord.GetTraitLevel(DefaultTraits.Honor) / 20f) * (JGUMSettings.Instance.LordHonorMultiplier / 100f); // Honor -
+                traitEffect += (lord.GetTraitLevel(DefaultTraits.Calculating) / 20f) * (JgumSettingsManager.LordCalculatingMultiplier / 100f); // Calculating +
+                traitEffect -= (lord.GetTraitLevel(DefaultTraits.Valor) / 10f) * (JgumSettingsManager.LordValorMultiplier / 100f); // Valor -
+                traitEffect += (lord.GetTraitLevel(DefaultTraits.Mercy) / 20f) * (JgumSettingsManager.LordMercyMultiplier / 100f); // Mercy +
+                traitEffect -= (lord.GetTraitLevel(DefaultTraits.Honor) / 20f) * (JgumSettingsManager.LordHonorMultiplier / 100f); // Honor -
             }
 
             // Formula: (Power Ratio + Morale Ratio) - (Lord Count * 0.1) + Trait Effect > Base Surrender Threshold * Config Tendency
             // Note: Lords make defense more stubborn, so we subtract them.
             float totalRatio = (powerRatio) - (lordCount * 0.1f) + traitEffect;
-            float threshold = JGUMSettings.Instance.BaseSurrenderThreshold / configTendency;
+            float threshold = JgumSettingsManager.BaseSurrenderThreshold / configTendency;
 
             return totalRatio > threshold;
         }
@@ -86,16 +80,16 @@ namespace JGUM.Calculators
         private float GetNearbyEnemiesStrength(Settlement? settlement)
         {
             float totalEnemyStrength = 0f;
-            var settings = JGUMSettings.Instance;
             var playerParty = MobileParty.MainParty;
             var playerFaction = Hero.MainHero?.MapFaction;
+            var settlementFaction = settlement?.MapFaction;
 
-            if (settings == null || playerParty == null || playerFaction == null)
+            if (playerParty == null || playerFaction == null || settlementFaction == null)
                 return 0f;
 
             var playerPosition = playerParty.Position;
-            var detectionRange = 7f; //Was configurable but found out the exact need.
-            var strengthPercentage = settings.NearbyEnemyLordStrengthPercentage / 100f;
+            var detectionRange = 7f; // Was configurable but found out the exact need.
+            var strengthPercentage = JgumSettingsManager.NearbyEnemyLordStrengthPercentage / 100f;
 
             if (detectionRange <= 0f || strengthPercentage <= 0f)
                 return 0f;
@@ -106,8 +100,8 @@ namespace JGUM.Calculators
                     h != Hero.MainHero &&
                     h.MapFaction != null &&
                     h.MapFaction.IsAtWarWith(playerFaction) &&
-                    !h.MapFaction.IsAtWarWith(settlement?.MapFaction) && // Exclude lords from factions that are also at war with the settlement to avoid boosting strength from irrelevant enemies.
-                    h.PartyBelongedTo != null &&
+                    !h.MapFaction.IsAtWarWith(settlementFaction) // Exclude factions already at war with the besieged settlement.
+                    && h.PartyBelongedTo != null &&
                     h.PartyBelongedTo.Party != null)
                 .ToList();
 

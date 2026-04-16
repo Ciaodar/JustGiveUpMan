@@ -19,28 +19,34 @@ namespace JGUM.Calculators
         public bool ShouldEnemySurrenderInEncounter(
             IEnumerable<Hero>? enemyLeaders)
         {
-            float enemyStrength = PlayerEncounter.Battle.StrengthOfSide[(int)PartyBase.MainParty.OpponentSide];
-            float playerStrength = PlayerEncounter.Battle.StrengthOfSide[(int)PartyBase.MainParty.Side];
-            // Calculate current strength of both parties.
+            var encounter = PlayerEncounter.Current;
+            var battle = PlayerEncounter.Battle;
+            var mainParty = PartyBase.MainParty;
 
-           
+            if (encounter == null || battle == null || mainParty == null)
+                return false;
+
+            var playerSide = encounter.PlayerSide;
+            var enemySide = playerSide == BattleSideEnum.Attacker
+                ? BattleSideEnum.Defender
+                : BattleSideEnum.Attacker;
+
+            float playerStrength = battle.StrengthOfSide[(int)playerSide];
+            float enemyStrength = battle.StrengthOfSide[(int)enemySide];
 
             if (enemyStrength <= 0)
                 return true;
 
-            // Power ratio: how much stronger is the player.
+            // Power ratio: how much stronger is the player side in this encounter.
             float powerRatio = playerStrength / enemyStrength;
-            
 
             var uniqueEnemyLeaders = enemyLeaders?
+                .Where(h => h != null)
                 .Distinct()
                 .ToList() ?? new List<Hero>();
 
             if (!uniqueEnemyLeaders.Any())
                 return false;
-
-            // Calculate trait effects
-            float traitEffect = 0f;
 
             // Use average enemy leader traits to keep scaling stable in multi-lord encounters.
             float avgValor = (float)uniqueEnemyLeaders.Average(h => h.GetTraitLevel(DefaultTraits.Valor));
@@ -48,19 +54,17 @@ namespace JGUM.Calculators
             float avgCalculating = (float)uniqueEnemyLeaders.Average(h => h.GetTraitLevel(DefaultTraits.Calculating));
             float avgMercy = (float)uniqueEnemyLeaders.Average(h => h.GetTraitLevel(DefaultTraits.Mercy));
 
-            // Enemy traits make them more stubborn.
-            traitEffect -= (avgValor / 10f) * (JGUMSettings.Instance!.LordValorMultiplier / 100f);
-            traitEffect -= (avgHonor / 20f) * (JGUMSettings.Instance.LordHonorMultiplier / 100f);
-            traitEffect += (avgCalculating / 20f) * (JGUMSettings.Instance.LordCalculatingMultiplier / 100f);
-            traitEffect += (avgMercy / 20f) * (JGUMSettings.Instance.LordMercyMultiplier / 100f);
+            float traitEffect = 0f;
+            traitEffect -= (avgValor / 10f) * (JgumSettingsManager.LordValorMultiplier / 100f);
+            traitEffect -= (avgHonor / 20f) * (JgumSettingsManager.LordHonorMultiplier / 100f);
+            traitEffect += (avgCalculating / 20f) * (JgumSettingsManager.LordCalculatingMultiplier / 100f);
+            traitEffect += (avgMercy / 20f) * (JgumSettingsManager.LordMercyMultiplier / 100f);
 
-            // Player mercy affects surrender chance
             var player = Hero.MainHero;
-            traitEffect += (player.GetTraitLevel(DefaultTraits.Mercy) / 10f) * (JGUMSettings.Instance.PlayerMercyMultiplier / 100f);
+            traitEffect += (player.GetTraitLevel(DefaultTraits.Mercy) / 10f) * (JgumSettingsManager.PlayerMercyMultiplier / 100f);
 
-            // Formula: (Power Ratio + Morale Ratio) + Trait Effect > Base Surrender Threshold * Config Tendency
-            float totalRatio = (powerRatio) + traitEffect;
-            float threshold = JGUMSettings.Instance.BaseSurrenderThreshold / JGUMSettings.Instance.SurrenderTendencyMultiplier;
+            float totalRatio = powerRatio + traitEffect;
+            float threshold = JgumSettingsManager.BaseSurrenderThreshold / JgumSettingsManager.SurrenderTendencyMultiplier;
 
             return totalRatio > threshold;
         }
@@ -75,4 +79,3 @@ namespace JGUM.Calculators
         }
     }
 }
-

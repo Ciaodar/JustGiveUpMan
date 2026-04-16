@@ -1,6 +1,6 @@
 ﻿<Module>
-  <Name value="Just Give Up Man!" />
-  <Id value="JGUM" />
+  <Name value="Just Give Up Man! (MCM)" />
+  <Id value="JGUM_MCM" />
   <Version value="v0.5.9.217" />
   <SingleplayerModule value="true" />
   <MultiplayerModule value="false" />
@@ -13,7 +13,7 @@
   </DependedModules>
   <SubModules>
     <SubModule>
-      <Name value="JGUM" />
+      <Name value="JGUM_MCM" />
       <DLLName value="JGUM.dll" />
       <SubModuleClassType value="JGUM.JGUMSubModule" />
       <Tags>
@@ -23,3 +23,4 @@
   </SubModules>
   <Xmls/>
 </Module>
+

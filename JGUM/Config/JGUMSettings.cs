@@ -1,10 +1,11 @@
-﻿using MCM.Abstractions.Attributes;
+﻿#if USE_MCM
+using MCM.Abstractions.Attributes;
 using MCM.Abstractions.Attributes.v2;
 using MCM.Abstractions.Base.Global;
 
 namespace JGUM.Config
 {
-    public class JGUMSettings : AttributeGlobalSettings<JGUMSettings>
+    public class JgumMcmSettings : AttributeGlobalSettings<JgumMcmSettings>
     {
         public override string Id => "JGUMSettings";
         public override string DisplayName => "Just Give Up Man";
@@ -43,5 +44,9 @@ namespace JGUM.Config
         [SettingPropertyGroup("{=JGUM.Settings.SiegeSettings.Name}Siege Settings")]
         public float NearbyEnemyLordStrengthPercentage { get; set; } = 50f;
 
+        [SettingPropertyInteger("Required Surrender Count", 1, 10, Order = 8, RequireRestart = false, HintText = "How many accepted surrenders are needed before mercy trait gain is applied.")]
+        [SettingPropertyGroup("{=JGUM.Settings.SiegeSettings.Name}Siege Settings")]
+        public int RequiredSurrenderCount { get; set; } = 3;
     }
 }
+#endif

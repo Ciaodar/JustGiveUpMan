@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using JGUM.Calculators;
+using JGUM.Config;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
@@ -209,7 +210,7 @@ namespace JGUM.Behaviors
 
             _lordSurrenderCounts[surrenderedHero]++;
 
-            if (_lordSurrenderCounts[surrenderedHero] >= 3)
+            if (_lordSurrenderCounts[surrenderedHero] >= JgumSettingsManager.RequiredSurrenderCount)
             {
                 var currentMercy = surrenderedHero.GetTraitLevel(DefaultTraits.Mercy);
                 if (currentMercy < 2)

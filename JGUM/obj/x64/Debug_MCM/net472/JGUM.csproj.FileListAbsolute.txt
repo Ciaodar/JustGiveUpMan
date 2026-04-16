@@ -1,0 +1,12 @@
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\bin\x64\Debug_MCM\net472\JGUM.dll
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\bin\x64\Debug_MCM\net472\JGUM.pdb
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\bin\x64\Debug_MCM\net472\MCM.UI.Adapter.MCMv5.dll
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\bin\x64\Debug_MCM\net472\MCMv5.dll
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\bin\x64\Debug_MCM\net472\MCM.UI.Adapter.MCMv5.pdb
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\obj\x64\Debug_MCM\net472\JGUM.csproj.AssemblyReference.cache
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\obj\x64\Debug_MCM\net472\JGUM.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\obj\x64\Debug_MCM\net472\JGUM.csproj.CoreCompileInputs.cache
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\obj\x64\Debug_MCM\net472\JGUM.sourcelink.json
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\obj\x64\Debug_MCM\net472\JGUM.csproj.Up2Date
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\obj\x64\Debug_MCM\net472\JGUM.dll
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\obj\x64\Debug_MCM\net472\JGUM.pdb

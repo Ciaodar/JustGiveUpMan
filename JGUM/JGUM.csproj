@@ -8,15 +8,62 @@
     <GameFolder>C:\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord</GameFolder>
     <ModuleName>JGUM</ModuleName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Configurations>Debug;Release;Debug_MCM;Release_MCM</Configurations>
+
+    <!-- Dual-variant build orchestration -->
+    <IsDualBuildChild Condition="'$(IsDualBuildChild)'==''">false</IsDualBuildChild>
+    <EnableDualVariantBuild Condition="'$(EnableDualVariantBuild)'==''">true</EnableDualVariantBuild>
+    <StandaloneModuleName>JGUM_Standalone</StandaloneModuleName>
+    <McmModuleName>JGUM_MCM</McmModuleName>
   </PropertyGroup>
 
-  <ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_MCM|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE;USE_MCM</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_MCM|AnyCPU'">
+    <DefineConstants>TRACE;USE_MCM</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_MCM|x64'">
+    <DefineConstants>DEBUG;TRACE;USE_MCM</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_MCM|x64'">
+    <DefineConstants>TRACE;USE_MCM</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <OutputModuleName Condition="'$(Configuration)'=='Debug_MCM' Or '$(Configuration)'=='Release_MCM'">$(McmModuleName)</OutputModuleName>
+    <OutputModuleName Condition="'$(OutputModuleName)'==''">$(StandaloneModuleName)</OutputModuleName>
+
+    <SubModuleTemplatePath Condition="'$(Configuration)'=='Debug_MCM' Or '$(Configuration)'=='Release_MCM'">$(ProjectDir)SubModule.MCM.xml</SubModuleTemplatePath>
+    <SubModuleTemplatePath Condition="'$(SubModuleTemplatePath)'==''">$(ProjectDir)SubModule.Standalone.xml</SubModuleTemplatePath>
+
+    <CounterpartConfiguration Condition="'$(Configuration)'=='Debug'">Debug_MCM</CounterpartConfiguration>
+    <CounterpartConfiguration Condition="'$(Configuration)'=='Release'">Release_MCM</CounterpartConfiguration>
+    <CounterpartConfiguration Condition="'$(Configuration)'=='Debug_MCM'">Debug</CounterpartConfiguration>
+    <CounterpartConfiguration Condition="'$(Configuration)'=='Release_MCM'">Release</CounterpartConfiguration>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(Configuration)'=='Debug_MCM' Or '$(Configuration)'=='Release_MCM'">
     <Reference Include="MCM.UI.Adapter.MCMv5">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCM.UI.Adapter.MCMv5.dll</HintPath>
     </Reference>
     <Reference Include="MCMv5">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\XorberaxLegacy\bin\Gaming.Desktop.x64_Shipping_Client\MCMv5.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="TaleWorlds.CampaignSystem">
       <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.CampaignSystem.dll</HintPath>
       <Private>False</Private>
@@ -41,24 +88,35 @@
       <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.ObjectSystem.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Testing\" />
   </ItemGroup>
 
-  <!-- This target runs after the build is complete -->
+  <!-- Build counterpart configuration once so Shift+B yields both variants. -->
+  <Target Name="BuildCounterpartVariant" AfterTargets="Build"
+          Condition="'$(EnableDualVariantBuild)'=='true' and '$(IsDualBuildChild)'!='true' and '$(CounterpartConfiguration)'!=''">
+    <MSBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="Build"
+             Properties="Configuration=$(CounterpartConfiguration);Platform=$(Platform);IsDualBuildChild=true;EnableDualVariantBuild=false" />
+  </Target>
+
+  <!-- Deploy currently-built variant to its own module folder. -->
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <PropertyGroup>
-      <ModuleFolder>$(GameFolder)\Modules\$(ModuleName)</ModuleFolder>
+      <ModuleFolder>$(GameFolder)\Modules\$(OutputModuleName)</ModuleFolder>
     </PropertyGroup>
     <ItemGroup>
       <ModuleBin Include="$(TargetDir)$(ProjectName).dll" />
-      <SubModuleXml Include="$(ProjectDir)SubModule.xml" />
       <ModuleData Include="$(ProjectDir)ModuleData\**\*.*" />
     </ItemGroup>
     <Copy SourceFiles="@(ModuleBin)" DestinationFolder="$(ModuleFolder)\bin\Win64_Shipping_Client" />
-    <Copy SourceFiles="@(SubModuleXml)" DestinationFolder="$(ModuleFolder)" />
+    <Copy SourceFiles="$(SubModuleTemplatePath)" DestinationFiles="$(ModuleFolder)\SubModule.xml" />
     <Copy SourceFiles="@(ModuleData)" DestinationFolder="$(ModuleFolder)\ModuleData\%(RecursiveDir)" />
   </Target>
 

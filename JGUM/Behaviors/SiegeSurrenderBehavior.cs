@@ -118,7 +118,7 @@ namespace JGUM.Behaviors
             if (!settlement.IsUnderSiege || SurrenderDialogContext.IsInSurrenderConversation)
                 return;
 
-            if (_calculator.ShouldSettlementSurrender(settlement, JGUMSettings.Instance!.SurrenderTendencyMultiplier))
+            if (_calculator.ShouldSettlementSurrender(settlement, JgumSettingsManager.SurrenderTendencyMultiplier))
             {
                 var playerParty = MobileParty.MainParty;
                 if (settlement.SiegeEvent?.BesiegerCamp.HasInvolvedPartyForEventType(playerParty.Party) == true)
@@ -204,8 +204,7 @@ namespace JGUM.Behaviors
                 Hero.MainHero.SetTraitLevel(DefaultTraits.Mercy, currentMercy + 1);
             if (PlayerEncounter.Current !=null)
                 PlayerEncounter.Finish();
-            if (siegeEvent !=null)
-                siegeEvent.FinalizeSiegeEvent();
+            siegeEvent.FinalizeSiegeEvent();
             
             EncounterManager.StartSettlementEncounter(MobileParty.MainParty, settlement);
         }
