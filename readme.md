@@ -1,38 +1,118 @@
-﻿# Just Give Up Man! (JGUM) - Alpha Release
+﻿# Just Give Up Man! (JGUM)
 
-A Mount & Blade II: Bannerlord mod that enhances siege mechanics by introducing dynamic surrender options for besieged settlements.
+`JGUM` is a Mount & Blade II: Bannerlord singleplayer mod that adds surrender mechanics for:
+- besieged settlements,
+- hostile lord encounters,
+- patrol encounters.
 
-## Current Status: Alpha Release (v0.1.1.73)
+The goal is to reduce repetitive battles when one side is clearly overwhelmed, while keeping player choice (accept or reject surrender) and trait consequences.
 
-This mod is currently in early development. While core functionality is present, you may encounter bugs, incomplete features, and balancing issues. Your feedback is crucial for its development!
+## Module Variants
+
+This repository builds and deploys two variants from the same codebase:
+
+1. `JGUM` (Standalone, default)
+   - No MCM dependency
+   - Reads settings from JSON (`JgumSettingsManager`)
+
+2. `JGUM_MCM` (optional)
+   - Requires MCM dependency chain
+   - Reads settings from MCM UI
+
+Variant metadata templates:
+- `JGUM/SubModule.Standalone.xml`
+- `JGUM/SubModule.MCM.xml`
 
 ## Features
 
-### Implemented (v0.1.1.73 Alpha)
-
-*   **Dynamic Settlement Surrender:** Besieged settlements can now offer to surrender based on internal calculations (e.g., starvation, morale).
-*   **Localization Support:** Fully localized, allowing for easy translation into multiple languages.
-
-### Planned Features
-
-*   **v0.2.x.x Alpha:** Surrender conditions will also depend on the traits of the defending lord.
-*   **v0.3.x.x Alpha:** Lords themselves will be able to surrender in field battles or when cornered.
-*   **v0.4.x.x Alpha:** Implement a more intuitive Graphical User Interface (GUI) for surrender interactions.
-*   **v0.5.x.x Alpha:** Settlements will factor in the presence and strength of nearby allied lords when calculating their willingness to surrender.
-*   **Post-Release:** A complete "Persuasion Overhaul" to enhance diplomatic options beyond surrender.
+- Dynamic settlement surrender checks during siege starvation flow
+- Lord encounter surrender dialog interception (multi-party aware)
+- Patrol encounter surrender behavior (`PatrolEncounterSurrenderBehavior`)
+- Player accept/reject consequences with Mercy trait impact
+- EN/TR localization via `ModuleData/Languages/*/jgum_strings.xml`
 
 ## Installation
 
-1.  Download the latest release from the [Nexus Mods page](YOUR_NEXUS_MODS_LINK_HERE).
-2.  Extract the contents of the downloaded `.zip` file directly into your Mount & Blade II: Bannerlord `Modules` folder (typically located at `SteamLibrary\steamapps\common\Mount & Blade II Bannerlord\Modules`).
-3.  Launch Bannerlord and ensure "Just Give Up Man!" is checked in the launcher's "Mods" section.
+1. Place module folder(s) into Bannerlord `Modules` directory.
+2. Enable either:
+   - `JGUM` (Standalone), or
+   - `JGUM_MCM` (MCM variant).
+3. Keep the chosen module after native modules in load order.
 
-## Bug Reporting & Feedback
+Typical modules path:
+`C:\Program Files (x86)\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules`
 
-Please report any bugs, crashes, or technical issues on the GitHub Issues page.
-For general feedback, suggestions, or discussions, feel free to use the comments section on Nexus Mods.
+## Requirements
+
+### Standalone (`JGUM`)
+- Bannerlord base game modules only (Native/Sandbox stack)
+
+### MCM (`JGUM_MCM`)
+- Bannerlord base game modules
+- MCM v5 adapter chain referenced in project:
+  - `Bannerlord.MBOptionScreen`
+  - `XorberaxLegacy` (MCMv5)
+
+## Build From Source
+
+Project target:
+- `net472`, `x64`
+
+Solution:
+- `JustGiveUpMan.sln`
+
+Main project:
+- `JGUM/JGUM.csproj`
+
+Build profiles include:
+- `Debug`, `Release`, `Debug_MCM`, `Release_MCM`
+
+Dual-variant build is enabled in `JGUM.csproj`, so building one profile also builds its counterpart.
+
+```powershell
+Set-Location "C:\Users\meteh\RiderProjects\JustGiveUpMan"
+dotnet build .\JGUM\JGUM.csproj -c Release -p:Platform=x64
+```
+
+Post-build deploy copies output to:
+- `Modules\JGUM` (Standalone)
+- `Modules\JGUM_MCM` (MCM)
+
+## Configuration
+
+Settings backend is managed by:
+- `JGUM/Config/JgumSettingsManager.cs`
+
+- Standalone: JSON-backed settings (`config.json`)
+- MCM: `USE_MCM` compile symbol path
+
+## Localization
+
+Localization files:
+- `JGUM/ModuleData/Languages/EN/jgum_strings.xml`
+- `JGUM/ModuleData/Languages/TR/jgum_strings.xml`
+
+String access pattern in code:
+- `StringCalculator.GetString(baseId, fallback)`
+
+When adding new localized text:
+1. Add key to EN
+2. Add same key to TR
+3. Keep IDs synchronized
+
+## Notes
+
+- No automated tests are included in this repository.
+- In-game validation is required for siege/lord/patrol dialogue paths.
+
+## Contributing / Issues
+
+If you find bugs or regressions, open an issue with:
+- Bannerlord version
+- Active variant (`JGUM` or `JGUM_MCM`)
+- Repro steps
+- Crash log / stack trace (if available)
 
 ## License
 
-This project is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0).
-You are free to share and adapt the material for non-commercial purposes, provided you give appropriate credit and distribute your contributions under the same license.
+CC BY-NC-SA 4.0
