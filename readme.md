@@ -50,8 +50,10 @@ Typical modules path:
 ### MCM (`JGUM_MCM`)
 - Bannerlord base game modules
 - MCM v5 adapter chain referenced in project:
-  - `Bannerlord.MBOptionScreen`
-  - `XorberaxLegacy` (MCMv5)
+  - `Harmony`
+  - `Butterlib`
+  - `UIExtenderEx`
+  - `MCMv5`
 
 ## Build From Source
 
