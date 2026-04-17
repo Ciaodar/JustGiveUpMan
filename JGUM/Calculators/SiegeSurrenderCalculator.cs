@@ -26,8 +26,11 @@ namespace JGUM.Calculators
             // Nearby enemy lords: Get hostile lords within detection range to boost defender defense perception.
             var nearbyEnemyLordStrength = GetNearbyEnemiesStrength(settlement);
             
-            // Defenders: Settlement garrison and militia are held as Party objects.
+            // Defenders: Settlement parties + nearby friendly lord parties that can reinforce.
             var defenders = settlement.Parties.Select(p => p.Party).ToList();
+            var nearbyDefenderParties = GetNearbyDefendingLordParties(settlement);
+            defenders.AddRange(nearbyDefenderParties);
+            defenders = defenders.Distinct().ToList();
             
             // If there is no one left to defend in the fortress (Garrison/Militia/Lord), they surrender immediately.
             if (!defenders.Any()) 
@@ -80,45 +83,57 @@ namespace JGUM.Calculators
         private float GetNearbyEnemiesStrength(Settlement? settlement)
         {
             float totalEnemyStrength = 0f;
-            var playerParty = MobileParty.MainParty;
-            var playerFaction = Hero.MainHero?.MapFaction;
             var settlementFaction = settlement?.MapFaction;
+            var besiegerFaction = settlement?.SiegeEvent?.BesiegerCamp?.LeaderParty?.MapFaction;
 
-            if (playerParty == null || playerFaction == null || settlementFaction == null)
+            if (settlementFaction == null)
                 return 0f;
 
-            var playerPosition = playerParty.Position;
+            var settlementPosition = settlement!.GatePosition;
             var detectionRange = 7f; // Was configurable but found out the exact need.
             var strengthPercentage = JgumSettingsManager.NearbyEnemyLordStrengthPercentage / 100f;
 
             if (detectionRange <= 0f || strengthPercentage <= 0f)
                 return 0f;
 
-            // Only include lords with valid parties to avoid transient state nulls during campaign ticks.
-            var hostileLords = Hero.AllAliveHeroes.Where(h =>
-                    h.IsLord &&
-                    h != Hero.MainHero &&
-                    h.MapFaction != null &&
-                    h.MapFaction.IsAtWarWith(playerFaction) &&
-                    !h.MapFaction.IsAtWarWith(settlementFaction) // Exclude factions already at war with the besieged settlement.
-                    && h.PartyBelongedTo != null &&
-                    h.PartyBelongedTo.Party != null)
-                .ToList();
-
-            foreach (var hero in hostileLords)
+            foreach (var party in MobileParty.All)
             {
-                var lordParty = hero.PartyBelongedTo;
-                if (lordParty?.Party == null)
+                if (party?.Party == null || party.LeaderHero == null || !party.LeaderHero.IsLord)
+                    continue;
+                if (party.MapFaction == null)
+                    continue;
+                if (!party.MapFaction.IsAtWarWith(settlementFaction))
+                    continue;
+                if (besiegerFaction != null && !party.MapFaction.IsAtWarWith(besiegerFaction))
                     continue;
 
-                float distance = (lordParty.Position - playerPosition).Length;
+                float distance = (party.Position - settlementPosition).Length;
                 if (distance > detectionRange)
                     continue;
 
-                totalEnemyStrength += lordParty.Party.CalculateCurrentStrength() * strengthPercentage;
+                totalEnemyStrength += party.Party.CalculateCurrentStrength() * strengthPercentage;
             }
 
             return totalEnemyStrength;
+        }
+
+        private static System.Collections.Generic.List<PartyBase> GetNearbyDefendingLordParties(Settlement settlement)
+        {
+            var settlementFaction = settlement.MapFaction;
+            if (settlementFaction == null)
+                return new System.Collections.Generic.List<PartyBase>();
+
+            var detectionRange = 7f;
+            var settlementPosition = settlement.GatePosition;
+
+            return MobileParty.All
+                .Where(p => p?.Party != null && p.LeaderHero != null && p.LeaderHero.IsLord)
+                .Where(p => p.MapFaction != null && p.MapFaction == settlementFaction)
+                .Where(p => p.CurrentSettlement == null || p.CurrentSettlement == settlement)
+                .Where(p => (p.Position - settlementPosition).Length <= detectionRange)
+                .Select(p => p.Party)
+                .Distinct()
+                .ToList();
         }
     }
 }

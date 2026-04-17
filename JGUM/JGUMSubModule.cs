@@ -1,9 +1,8 @@
-﻿using TaleWorlds.CampaignSystem;
+﻿using JGUM.Calculators;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
-using TaleWorlds.Library;
-using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
-using JGUM.Config; 
+using JGUM.Config;
 
 namespace JGUM
 {
@@ -16,11 +15,7 @@ namespace JGUM
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
             base.OnBeforeInitialModuleScreenSetAsRoot();
-            
 
-            TextObject testText = new TextObject("{=jgum_test_msg}JGUM Translate Error");
-            
-            InformationManager.DisplayMessage(new InformationMessage(testText.ToString(), Colors.Red));
 
             // Initialize config backend (MCM or JSON) once on module root screen.
             JgumSettingsManager.Initialize();
@@ -29,6 +24,7 @@ namespace JGUM
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
             base.OnGameStart(game, gameStarterObject);
+
 
             if (game.GameType is Campaign)
             {
@@ -39,6 +35,9 @@ namespace JGUM
                 
                 // Add lord encounter surrender behavior to intercept field lord conversations.
                 campaignStarter.AddBehavior(new Behaviors.LordEncounterSurrenderBehavior());
+
+                // Add patrol encounter surrender behavior for non-lord hostile patrol encounters.
+                campaignStarter.AddBehavior(new Behaviors.PatrolEncounterSurrenderBehavior());
             }
         }
     }

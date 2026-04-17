@@ -60,12 +60,13 @@ namespace JGUM.Behaviors
                 null,
                 10000  // High priority
             );
+
             
             starter.AddDialogLine("jgum_lord_surrender_offer_alt2", "party_encounter_lord_hostile_attacker_3", "jgum_lord_player_response",
                 StringCalculator.GetString("jgum_field_surrender_offer", "STOP, We cannot fight you. We surrender!"),
                 CheckLordEncounterSurrender,
                 null,
-                10000  // High priority
+                10000  // High priority patrol_talk_start_attack
             );
 
             // Player accepts surrender
@@ -100,19 +101,61 @@ namespace JGUM.Behaviors
             var encounter = PlayerEncounter.Current;
             var battle = PlayerEncounter.Battle;
 
-            if (encounter == null || battle == null) return false;
-                var playerSide = encounter.PlayerSide;
-                var enemySide = playerSide.GetOppositeSide();
+            if (encounter == null) return false;
+            var playerSide = encounter.PlayerSide;
+            var enemySide = playerSide.GetOppositeSide();
 
-                var playerParties = GetEncounterPartiesForSide(battle, playerSide);
+            List<Hero> enemyLeaders;
+
+            float playerStrength;
+            float enemyStrength;
+
+            if (battle != null)
+            {
                 var enemyParties = GetEncounterPartiesForSide(battle, enemySide);
-                var enemyLeaders = GetEncounterLeaders(enemyParties);
+                enemyLeaders = GetEncounterLeaders(enemyParties);
+                playerStrength = battle.StrengthOfSide[(int)playerSide];
+                enemyStrength = battle.StrengthOfSide[(int)enemySide];
+            }
+            else
+            {
+                // Pre-battle fallback: include parties likely to join both sides.
+                var playerSideMobiles = new List<MobileParty>();
+                var enemySideMobiles = new List<MobileParty>();
 
-                if (!enemyLeaders.Any())
-                    enemyLeaders.Add(conversationHero);
+                if (MobileParty.MainParty != null)
+                    playerSideMobiles.Add(MobileParty.MainParty);
+                if (enemyParty.MobileParty != null)
+                    enemySideMobiles.Add(enemyParty.MobileParty);
 
-                
-            shouldSurrender = _calculator.ShouldEnemySurrenderInEncounter(enemyLeaders);
+                encounter.FindAllNpcPartiesWhoWillJoinEvent(playerSideMobiles, enemySideMobiles);
+
+                var playerSideParties = playerSideMobiles
+                    .Where(p => p?.Party != null)
+                    .Select(p => p.Party)
+                    .Distinct()
+                    .ToList();
+
+                var enemySideParties = enemySideMobiles
+                    .Where(p => p?.Party != null)
+                    .Select(p => p.Party)
+                    .Distinct()
+                    .ToList();
+
+                if (!playerSideParties.Any())
+                    playerSideParties.Add(mainParty);
+                if (!enemySideParties.Any())
+                    enemySideParties.Add(enemyParty);
+
+                playerStrength = playerSideParties.Sum(p => p.CalculateCurrentStrength());
+                enemyStrength = enemySideParties.Sum(p => p.CalculateCurrentStrength());
+                enemyLeaders = GetEncounterLeaders(enemySideParties);
+            }
+
+            if (!enemyLeaders.Any())
+                enemyLeaders.Add(conversationHero);
+
+            shouldSurrender = _calculator.ShouldEnemySurrenderInEncounter(enemyLeaders, playerStrength, enemyStrength);
             // Check if enemy lord should surrender based on current encounter state
             if (!shouldSurrender)
                 return false;
@@ -184,6 +227,13 @@ namespace JGUM.Behaviors
             LordEncounterSurrenderContext.EnemyLord ??= involvedCharacters.ToMBList()
                 .Find(hero => hero.HeroObject != Hero.MainHero);
 
+            var surrenderedHero = LordEncounterSurrenderContext.EnemyLord?.HeroObject;
+            if (surrenderedHero == null)
+            {
+                LordEncounterSurrenderContext.Clear();
+                return;
+            }
+
             if (PlayerEncounter.Current != null)
             {
                 // 1. Eğer savaş nesnesi yoksa başlat
@@ -197,11 +247,16 @@ namespace JGUM.Behaviors
                 // ana döngüsü (GameLoop) bu bayrakları görecek ve menüleri kendi kendine açacak.
                 PlayerEncounter.EnemySurrender = true;
                 PlayerEncounter.SetPlayerVictorious();
-                TakePrisonerAction.Apply(Hero.MainHero.PartyBelongedTo.Party, LordEncounterSurrenderContext.EnemyLord.HeroObject);
+                var mainParty = Hero.MainHero.PartyBelongedTo?.Party;
+                if (mainParty != null)
+                {
+                    var enemyLords = GetEnemyLordsInCurrentEncounter(surrenderedHero);
+                    foreach (var enemyLord in enemyLords)
+                    {
+                        TakePrisonerAction.Apply(mainParty, enemyLord);
+                    }
+                }
             }
-    
-
-            var surrenderedHero = LordEncounterSurrenderContext.EnemyLord.HeroObject;
 
             if (!_lordSurrenderCounts.ContainsKey(surrenderedHero))
             {
@@ -224,6 +279,28 @@ namespace JGUM.Behaviors
             TraitLevelingHelper.OnIncidentResolved(DefaultTraits.Mercy, 20); 
 
             LordEncounterSurrenderContext.Clear();    
+        }
+
+        private static List<Hero> GetEnemyLordsInCurrentEncounter(Hero fallbackLord)
+        {
+            var lords = new List<Hero>();
+            var encounter = PlayerEncounter.Current;
+            var battle = PlayerEncounter.Battle;
+
+            if (encounter != null && battle != null)
+            {
+                var enemySide = encounter.PlayerSide.GetOppositeSide();
+                lords = GetEncounterPartiesForSide(battle, enemySide)
+                    .Select(p => p.LeaderHero)
+                    .Where(h => h != null && h.IsLord && h != Hero.MainHero && !h.IsPrisoner && !h.IsDead)
+                    .Distinct()
+                    .ToList();
+            }
+
+            if (!lords.Contains(fallbackLord) && !fallbackLord.IsPrisoner && !fallbackLord.IsDead)
+                lords.Add(fallbackLord);
+
+            return lords;
         }
 
         public override void SyncData(IDataStore dataStore)

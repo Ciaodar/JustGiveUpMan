@@ -13,7 +13,7 @@
     <!-- Dual-variant build orchestration -->
     <IsDualBuildChild Condition="'$(IsDualBuildChild)'==''">false</IsDualBuildChild>
     <EnableDualVariantBuild Condition="'$(EnableDualVariantBuild)'==''">true</EnableDualVariantBuild>
-    <StandaloneModuleName>JGUM_Standalone</StandaloneModuleName>
+     <StandaloneModuleName>JGUM</StandaloneModuleName>
     <McmModuleName>JGUM_MCM</McmModuleName>
   </PropertyGroup>
 

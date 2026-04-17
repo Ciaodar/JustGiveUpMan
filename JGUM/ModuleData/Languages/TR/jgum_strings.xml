@@ -13,14 +13,14 @@
     <string id="jgum_field_surrender_reject_count" text="1" />
 
     <!-- Siege Surrender Dialogs -->
-    <string id="jgum_siege_defender_greeting" text="Gelmeniz için teşekkürler lordum." />
+    <string id="jgum_siege_defender_greeting" text="Geldiğiniz için teşekkür ederim, {?CONVERSATION_NPC.GENDER}Leydim{?}Lordum{\\?}." />
     <string id="jgum_siege_player_siege_surrender_offer" text="Durumunuzun ciddi olduğunu görüyorum. Teslim olmak ve halkınızı daha fazla acı çekmekten kurtarmak ister misiniz?" />
-    <string id="jgum_siege_surrender_offer_1" text="Haklısınız lordum! Açlıktan köpük kusuyoruz. Kale senindir. Bırak bizi lütfen." />
+    <string id="jgum_siege_surrender_offer_1" text="Haklısınız, {?CONVERSATION_NPC.GENDER}Leydim{?}Lordum{\\?}! Açlıktan kırılıyoruz. Kale sizindir; ne olur bizi bağışlayın." />
     <string id="jgum_siege_surrender_offer_2" text="Daha fazla dayanamayacağız. Lütfen merhamet et, kale senindir. Yeter ki bizi salıver" />
     <string id="jgum_siege_surrender_offer_3" text="Askerler isyanın eşiğinde, yiyecek kalmadı. Teslim oluyoruz. Bırak bizi gidelim kale de senin olsun!" />
 
     <!-- Accept -->
-    <string id="jgum_siege_defender_accepted" text="Merhametinize minnettarız lordum." />
+    <string id="jgum_siege_defender_accepted" text="Merhametinize minnettarız, {?CONVERSATION_NPC.GENDER}Leydim{?}Lordum{\\?}." />
     <string id="jgum_siege_surrender_accept_1" text="Sizi açlıktan kurtaran yeni efendiniz olarak merhamet ediyorum." />
     <string id="jgum_siege_surrender_accept_2" text="Akıllılık ettiniz. Silahlarınızı bırakın, canınızı bağışlıyorum." />
 
@@ -30,9 +30,9 @@
     <string id="jgum_siege_surrender_reject_2" text="Merhamet dilenmek için çok geç. Sizi ezmeye geliyorum." />
 
     <!-- Field Surrender Dialogs -->
-    <string id="jgum_field_surrender_offer_1" text="Silahlarınızı bırakın ve teslim olun! Çevrelenmişsiniz ve yenilmişsiniz." />
-    <string id="jgum_field_surrender_accept_1" text="Teslim oluyoruz! Canımızı bağışlarsan seni hizmetimizde bulacaksın." />
-    <string id="jgum_field_surrender_reject_1" text="Asla! Son nefesimize kadar savaşacağız!" />
+    <string id="jgum_field_surrender_offer_1" text="Durun! Sizinle savaşamayız. Teslim oluyoruz!" />
+    <string id="jgum_field_surrender_accept_1" text="Tesliminizi kabul ediyoruz. Silahlarınızı bırakın!" />
+    <string id="jgum_field_surrender_reject_1" text="Hayır, hepiniz öleceksiniz. Hazırlanın!" />
     <string id="jgum_field_surrender_end" text="Akıllı bir karar. Canın bağışlandı." />
     <string id="jgum_field_surrender_success" text="Düşman kuvvetleri teslim oldu!" />
     <string id="jgum_field_surrender_rejected" text="Savaş devam ediyor!" />
@@ -41,8 +41,9 @@
     <string id="jgum_siege_surrender_notification" text="{SETTLEMENT_NAME} kalesi komutanı teslim olmayı görüşmek istiyor." />
     <string id="jgum_siege_inquiry_title" text="Teslimiyet Teklifi" />
     <string id="jgum_siege_inquiry_accept" text="Görüşmeyi Kabul Et" />
-    <string id="jgum_siege_inquiry_reject" text="Reddet " />
-    <string id="jgum_siege_inquiry_reject" text="Reddet (Kuşatmaya Devam)" />
+    <string id="jgum_siege_inquiry_reject" text="Reddet" />
+    <string id="jgum_siege_assault_triggered" text="Açlık savunmayı kırdı, taraflar açık savaşa sürüklendi!" />
+    <string id="jgum_siege_starvation_sally_out" text="Açlıktan kırılan savunmacılar çaresiz bir huruç harekatı başlattı!" />
 
     <!-- Settings -->
     <string id="JGUM.Settings.SiegeSettings.Name" text="Genel Ayarlar" />

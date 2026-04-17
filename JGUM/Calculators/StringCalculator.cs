@@ -1,34 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using TaleWorlds.Core;
+﻿using TaleWorlds.Core;
 using TaleWorlds.Localization;
 
 namespace JGUM.Calculators
 {
     public static class StringCalculator
     {
-        private static readonly Dictionary<string, int> _countsCache = new Dictionary<string, int>();
-
-        private static string GetRandomStringId(string baseId)
+        private static int GetVariantCount(string baseId)
         {
-            if (!_countsCache.TryGetValue(baseId, out int count))
-            {
-                string countStr = new TextObject("{=" + baseId + "_count}").ToString();
-                if (!int.TryParse(countStr, out count))
-                {
-                    count = 1;
-                    return "{=" + baseId + "_}";
-                }
-                _countsCache[baseId] = count;
-            }
-
-            int randomVariant = MBRandom.RandomInt(1, count + 1);
-            return "{=" + baseId + "_" + randomVariant + "}";
+            string countText = new TextObject("{=" + baseId + "_count}0").ToString();
+            return int.TryParse(countText, out var count) && count > 0 ? count : 0;
         }
 
         public static string GetString(string baseId, string fallbackString)
         {
-            return new TextObject(GetRandomStringId(baseId)+fallbackString).ToString();
+            int variantCount = GetVariantCount(baseId);
+            string id = variantCount > 0
+                ? "{=" + baseId + "_" + MBRandom.RandomInt(1, variantCount + 1) + "}"
+                : "{=" + baseId + "}";
+
+            return new TextObject(id + fallbackString).ToString();
         }
     }
 }

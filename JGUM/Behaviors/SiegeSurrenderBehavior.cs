@@ -4,13 +4,18 @@ using JGUM.Calculators;
 using JGUM.Config;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
+using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
+using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.Conversation;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.CampaignSystem.Siege;
+using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
+using TaleWorlds.MountAndBlade;
 
 namespace JGUM.Behaviors
 {
@@ -38,13 +43,18 @@ namespace JGUM.Behaviors
 
         private void OnSessionLaunched(CampaignGameStarter campaignGameStarter)
         {
+#if DEBUG
+            InformationManager.DisplayMessage(new InformationMessage(
+                StringCalculator.GetString("jgum_test_msg", "Just Give Up Man loaded."),
+                Colors.Gray));
+#endif
             AddDialogs(campaignGameStarter);
         }
 
         private void AddDialogs(CampaignGameStarter starter)
         {
             starter.AddDialogLine("jgum_siege_defender_start", "start", "jgum_player_start",
-                StringCalculator.GetString("jgum_siege_defender_greeting","Thank you for coming, My lord."),
+                StringCalculator.GetString("jgum_siege_defender_greeting","Thank you for coming, my {?CONVERSATION_NPC.GENDER}Lady{?}Lord{\\?}."),
                 SurrenderCondition,
                 OnConversationRelationshipChanges(2),
                 9999
@@ -118,10 +128,11 @@ namespace JGUM.Behaviors
             if (!settlement.IsUnderSiege || SurrenderDialogContext.IsInSurrenderConversation)
                 return;
 
-            if (_calculator.ShouldSettlementSurrender(settlement, JgumSettingsManager.SurrenderTendencyMultiplier))
+            bool shouldSurrender = _calculator.ShouldSettlementSurrender(settlement, JgumSettingsManager.SurrenderTendencyMultiplier);
+
+            if (shouldSurrender)
             {
-                var playerParty = MobileParty.MainParty;
-                if (settlement.SiegeEvent?.BesiegerCamp.HasInvolvedPartyForEventType(playerParty.Party) == true)
+                if (IsPlayerBesieger(settlement))
                 {
                     StartSurrenderInquiry(settlement);
                 }
@@ -134,21 +145,25 @@ namespace JGUM.Behaviors
                     }
                 }
             }
+            else if (settlement.IsStarving && IsPlayerBesieger(settlement))
+            {
+                StartStarvationSallyOut(settlement);
+            }
         }
 
         private void StartSurrenderInquiry(Settlement settlement)
         {
-            var notificationText = new TextObject("{=jgum_siege_surrender_notification}{SETTLEMENT_NAME} wants to negotiate surrender with you.");
+            var notificationText = new TextObject(StringCalculator.GetString("jgum_siege_surrender_notification", "{SETTLEMENT_NAME} wants to negotiate surrender with you."));
             notificationText.SetTextVariable("SETTLEMENT_NAME", settlement.Name);
 
             InformationManager.ShowInquiry(new InquiryData(
-                new TextObject("{=jgum_siege_inquiry_title}Surrender Negotiation").ToString(),
+                StringCalculator.GetString("jgum_siege_inquiry_title", "Surrender Negotiation"),
                 notificationText.ToString(),
                 true, true,
-                new TextObject("{=jgum_siege_inquiry_accept}Accept Meeting").ToString(),
-                new TextObject("{=jgum_siege_inquiry_reject}Reject Offer").ToString(),
+                StringCalculator.GetString("jgum_siege_inquiry_accept", "Accept Meeting"),
+                StringCalculator.GetString("jgum_siege_inquiry_reject", "Reject Offer"),
                 () => OnInquiryAccepted(settlement),
-                OnInquiryRejected
+                () => OnInquiryRejected(settlement)
             ), true);
         }
 
@@ -172,7 +187,9 @@ namespace JGUM.Behaviors
             {
                 SurrenderDialogContext.IsInSurrenderConversation = true;
                 SurrenderDialogContext.SurrenderingSettlement = settlement;
-                CampaignMapConversation.OpenConversation(new ConversationCharacterData(CharacterObject.PlayerCharacter), new ConversationCharacterData(defenderCharacter));
+                var playerData = new ConversationCharacterData(CharacterObject.PlayerCharacter);
+                var defenderData = BuildCivilianConversationData(defenderCharacter);
+                CampaignMapConversation.OpenConversation(playerData, defenderData);
             }
             else
             {
@@ -180,9 +197,9 @@ namespace JGUM.Behaviors
             }
         }
 
-        private void OnInquiryRejected()
+        private void OnInquiryRejected(Settlement settlement)
         {
-            RejectSurrender();
+            RejectSurrenderInternal(settlement);
         }
 
         private void AcceptSurrender()
@@ -211,10 +228,106 @@ namespace JGUM.Behaviors
 
         private void RejectSurrender()
         {
+            RejectSurrenderInternal(null);
+        }
+
+        private void RejectSurrenderInternal(Settlement? settlement)
+        {
             OnConversationRelationshipChanges(-2);
             var currentMercy = Hero.MainHero.GetTraitLevel(DefaultTraits.Mercy);
             if (currentMercy > -2)
                 Hero.MainHero.SetTraitLevel(DefaultTraits.Mercy, currentMercy - 1);
+
+            var targetSettlement = settlement ?? SurrenderDialogContext.SurrenderingSettlement;
+            if (targetSettlement != null && targetSettlement.IsStarving)
+            {
+                StartStarvationSallyOut(targetSettlement);
+            }
+        }
+
+        private static bool IsPlayerBesieger(Settlement settlement)
+        {
+            var playerParty = MobileParty.MainParty?.Party;
+            return playerParty != null && settlement.SiegeEvent?.BesiegerCamp.HasInvolvedPartyForEventType(playerParty) == true;
+        }
+
+        private static ConversationCharacterData BuildCivilianConversationData(CharacterObject character)
+        {
+            var conversationDataType = typeof(ConversationCharacterData);
+            foreach (var ctor in conversationDataType.GetConstructors())
+            {
+                var parameters = ctor.GetParameters();
+                if (parameters.Length == 0 || parameters[0].ParameterType != typeof(CharacterObject))
+                    continue;
+
+                object?[] args = new object?[parameters.Length];
+                args[0] = character;
+                bool assignedCivilianFlag = false;
+
+                for (int i = 1; i < parameters.Length; i++)
+                {
+                    var parameter = parameters[i];
+                    if (!assignedCivilianFlag && parameter.ParameterType == typeof(bool))
+                    {
+                        // Prefer civilian outfit when opening surrender talks.
+                        args[i] = true;
+                        assignedCivilianFlag = true;
+                        continue;
+                    }
+
+                    if (parameter.HasDefaultValue)
+                    {
+                        args[i] = parameter.DefaultValue;
+                        continue;
+                    }
+
+                    args[i] = parameter.ParameterType.IsValueType
+                        ? System.Activator.CreateInstance(parameter.ParameterType)
+                        : null;
+                }
+
+                if (!assignedCivilianFlag)
+                    continue;
+
+                if (ctor.Invoke(args) is ConversationCharacterData data)
+                    return data;
+            }
+
+            return new ConversationCharacterData(character);
+        }
+
+        private static void StartStarvationSallyOut(Settlement settlement)
+        {
+            if (!settlement.IsUnderSiege || !IsPlayerBesieger(settlement))
+                return;
+
+            if (PlayerEncounter.Current == null)
+            {
+                if (settlement.IsFortification)
+                    EncounterManager.StartPartyEncounter(settlement.Town?.GarrisonParty.Party, settlement.SiegeEvent.BesiegerCamp.LeaderParty.Party);
+            }
+            
+
+            var encounter = PlayerEncounter.Current;
+            if (encounter == null)
+                return;
+
+            encounter.ForceSallyOut = true;
+
+            if (PlayerEncounter.Battle == null)
+            {
+                PlayerEncounter.StartBattle();
+            }
+
+            var battle = PlayerEncounter.Battle;
+            if (battle == null)
+            {
+                return;
+            }
+
+            InformationManager.DisplayMessage(new InformationMessage(
+                StringCalculator.GetString("jgum_siege_starvation_sally_out", "The starving defenders have launched a desperate sally out!"),
+                Colors.Yellow));
         }
 
         private void OnConversationEnded(IEnumerable<CharacterObject> involvedCharacters)
@@ -231,3 +344,4 @@ namespace JGUM.Behaviors
         }
     }
 }
+

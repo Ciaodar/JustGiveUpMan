@@ -32,9 +32,9 @@
     <string id="jgum_siege_surrender_reject_2" text="It is too late to beg for mercy. I am coming to crush you." />
 
     <!-- Field Surrender Dialogs -->
-    <string id="jgum_field_surrender_offer_1" text="Lay down your arms and surrender! You are surrounded and outmatched." />
-    <string id="jgum_field_surrender_accept_1" text="We yield! Spare our lives and we will serve you." />
-    <string id="jgum_field_surrender_reject_1" text="Never! We will fight to the last man!" />
+    <string id="jgum_field_surrender_offer_1" text="STOP, We cannot fight you. We surrender!" />
+    <string id="jgum_field_surrender_accept_1" text="We accept your surrender. Lay down your arms!" />
+    <string id="jgum_field_surrender_reject_1" text="No, you all will be death. Prepare!" />
     <string id="jgum_field_surrender_end" text="A wise choice. You shall be spared." />
     <string id="jgum_field_surrender_success" text="Enemy forces have surrendered!" />
     <string id="jgum_field_surrender_rejected" text="The battle continues!" />
@@ -44,9 +44,11 @@
     <string id="jgum_siege_inquiry_title" text="Surrender Negotiation" />
     <string id="jgum_siege_inquiry_accept" text="Accept Meeting" />
     <string id="jgum_siege_inquiry_reject" text="Reject Offer" />
+    <string id="jgum_siege_assault_triggered" text="Starvation has broken the siege stalemate; battle begins!" />
+    <string id="jgum_siege_starvation_sally_out" text="The starving defenders have launched a desperate sally out!" />
 
     <!-- Settings -->
-    <string id="JGUM.Settings.SiegeSettings.Name" text="General Settings" />
+    <string id="JGUM.Settings.SiegeSettings.Name" text="Siege Settings" />
     <string id="JGUM.Settings.SurrenderTendencyMultiplier.Name" text="General Surrender Tendency" />
     <string id="JGUM.Settings.SurrenderTendencyMultiplier.Hint" text="Overall multiplier for the surrender chance. Higher values make surrenders more likely." />
     <string id="JGUM.Settings.BaseSurrenderThreshold.Name" text="Base Surrender Threshold" />
