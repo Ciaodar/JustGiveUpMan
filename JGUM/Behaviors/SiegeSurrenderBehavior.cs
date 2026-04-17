@@ -4,18 +4,15 @@ using JGUM.Calculators;
 using JGUM.Config;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
-using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
-using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.Conversation;
 using TaleWorlds.CampaignSystem.Encounters;
+using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
-using TaleWorlds.CampaignSystem.Siege;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
-using TaleWorlds.MountAndBlade;
 
 namespace JGUM.Behaviors
 {
@@ -48,13 +45,14 @@ namespace JGUM.Behaviors
                 StringCalculator.GetString("jgum_test_msg", "Just Give Up Man loaded."),
                 Colors.Gray));
 #endif
-            AddDialogs(campaignGameStarter);
+            if (JgumSettingsManager.EnableSiegeSurrender)
+                AddDialogs(campaignGameStarter);
         }
 
         private void AddDialogs(CampaignGameStarter starter)
         {
             starter.AddDialogLine("jgum_siege_defender_start", "start", "jgum_player_start",
-                StringCalculator.GetString("jgum_siege_defender_greeting","Thank you for coming, my {?CONVERSATION_NPC.GENDER}Lady{?}Lord{\\?}."),
+                StringCalculator.GetString("jgum_siege_defender_greeting","Thank you for coming, my {?PLAYER.GENDER}madame{?}sir{\\?}."),
                 SurrenderCondition,
                 OnConversationRelationshipChanges(2),
                 9999
@@ -104,10 +102,13 @@ namespace JGUM.Behaviors
         
         private bool SurrenderCondition()
         {
+            if (!JgumSettingsManager.EnableSiegeSurrender)
+                return false;
+
             if (!SurrenderDialogContext.IsInSurrenderConversation)
                 return false;
-            var conversationCharacter = Campaign.Current.ConversationManager.OneToOneConversationCharacter;
-            if (conversationCharacter == null || SurrenderDialogContext.SurrenderingSettlement == null)
+
+            if (SurrenderDialogContext.SurrenderingSettlement == null)
                 return false;
 
             var conversationHero = Campaign.Current.ConversationManager.OneToOneConversationHero;
@@ -128,7 +129,11 @@ namespace JGUM.Behaviors
             if (!settlement.IsUnderSiege || SurrenderDialogContext.IsInSurrenderConversation)
                 return;
 
-            bool shouldSurrender = _calculator.ShouldSettlementSurrender(settlement, JgumSettingsManager.SurrenderTendencyMultiplier);
+            if (!JgumSettingsManager.EnableSiegeSurrender && !JgumSettingsManager.EnableSiegeStarvationSallyOut)
+                return;
+
+            bool shouldSurrender = JgumSettingsManager.EnableSiegeSurrender &&
+                                   _calculator.ShouldSettlementSurrender(settlement);
 
             if (shouldSurrender)
             {
@@ -145,7 +150,7 @@ namespace JGUM.Behaviors
                     }
                 }
             }
-            else if (settlement.IsStarving && IsPlayerBesieger(settlement))
+            else if (JgumSettingsManager.EnableSiegeStarvationSallyOut && settlement.IsStarving && IsPlayerBesieger(settlement))
             {
                 StartStarvationSallyOut(settlement);
             }
@@ -153,17 +158,25 @@ namespace JGUM.Behaviors
 
         private void StartSurrenderInquiry(Settlement settlement)
         {
-            var notificationText = new TextObject(StringCalculator.GetString("jgum_siege_surrender_notification", "{SETTLEMENT_NAME} wants to negotiate surrender with you."));
-            notificationText.SetTextVariable("SETTLEMENT_NAME", settlement.Name);
+            
+            string notificationKey = settlement.IsCastle
+                ? "jgum_siege_surrender_notification_castle"
+                : "jgum_siege_surrender_notification_town";
+            string notificationFallback = settlement.IsCastle
+                ? "The castellan of {SETTLEMENT_NAME} wants to negotiate surrender with you."
+                : "The commander of {SETTLEMENT_NAME} wants to negotiate surrender with you.";
+            
+            MBTextManager.SetTextVariable("SETTLEMENT_NAME", settlement.Name?.ToString() ?? settlement.StringId);
 
             InformationManager.ShowInquiry(new InquiryData(
                 StringCalculator.GetString("jgum_siege_inquiry_title", "Surrender Negotiation"),
-                notificationText.ToString(),
-                true, true,
+                StringCalculator.GetString(notificationKey, notificationFallback),                
+                true,
+                true,
                 StringCalculator.GetString("jgum_siege_inquiry_accept", "Accept Meeting"),
                 StringCalculator.GetString("jgum_siege_inquiry_reject", "Reject Offer"),
-                () => OnInquiryAccepted(settlement),
-                () => OnInquiryRejected(settlement)
+                affirmativeAction: () => OnInquiryAccepted(settlement),
+                negativeAction: () => OnInquiryRejected(settlement)
             ), true);
         }
 
@@ -177,24 +190,81 @@ namespace JGUM.Behaviors
         
         private void OnInquiryAccepted(Settlement settlement)
         {
-            CharacterObject? defenderCharacter =
-                settlement.Parties.FirstOrDefault(p => p.LeaderHero != null && p.LeaderHero.IsLord)?.LeaderHero?.CharacterObject
-                ?? settlement.Town?.Governor?.CharacterObject
-                ?? settlement.Notables.FirstOrDefault()?.CharacterObject
-                ?? settlement.Town?.GarrisonParty?.LeaderHero.CharacterObject;
+            CharacterObject? defenderCharacter = FindSettlementRepresentative(settlement);
 
             if (defenderCharacter != null)
             {
                 SurrenderDialogContext.IsInSurrenderConversation = true;
                 SurrenderDialogContext.SurrenderingSettlement = settlement;
+
                 var playerData = new ConversationCharacterData(CharacterObject.PlayerCharacter);
-                var defenderData = BuildCivilianConversationData(defenderCharacter);
-                CampaignMapConversation.OpenConversation(playerData, defenderData);
+                var defenderData = new ConversationCharacterData(defenderCharacter, spawnAfterFight:true , noWeapon:true, noBodyguards:true, isCivilianEquipmentRequiredForLeader:true , isCivilianEquipmentRequiredForBodyGuardCharacters:true);
+
+                try
+                {
+                    CampaignMapConversation.OpenConversation(playerData, defenderData);
+                    return;
+                }
+                catch
+                {
+                    // If conversation setup fails for this settlement, continue with direct surrender.
+                    SurrenderDialogContext.IsInSurrenderConversation = false;
+                    SurrenderDialogContext.SurrenderingSettlement = null;
+                }
             }
-            else
+
+            AcceptSurrender();
+        }
+
+        private static CharacterObject? FindSettlementRepresentative(Settlement settlement)
+        {
+            var garrisonParty = settlement.Town?.GarrisonParty;
+            CharacterObject? garrisonLeader = garrisonParty?.LeaderHero?.CharacterObject;
+
+            CharacterObject? garrisonHeroRepresentative = null;
+            CharacterObject? garrisonTroopRepresentative = null;
+            var garrisonRoster = garrisonParty?.MemberRoster;
+            if (garrisonRoster != null)
             {
-                AcceptSurrender();
+                for (int i = 0; i < garrisonRoster.Count; i++)
+                {
+                    var element = garrisonRoster.GetElementCopyAtIndex(i);
+                    if (element.Number <= 0 || element.Character == null)
+                        continue;
+
+                    if (garrisonTroopRepresentative == null)
+                        garrisonTroopRepresentative = element.Character;
+
+                    if (element.Character.IsHero)
+                    {
+                        garrisonHeroRepresentative = element.Character;
+                        break;
+                    }
+                }
             }
+
+            var siegeEvent = settlement.SiegeEvent;
+            Hero? defenderLeader = siegeEvent != null
+                ? Campaign.Current.Models.EncounterModel.GetLeaderOfSiegeEvent(siegeEvent, BattleSideEnum.Defender)
+                : null;
+
+            CharacterObject? heroRepresentative =
+                garrisonLeader
+                ?? garrisonHeroRepresentative
+                ?? garrisonTroopRepresentative
+                ?? defenderLeader?.CharacterObject
+                ?? settlement.Parties.FirstOrDefault(p => p.LeaderHero != null && p.LeaderHero.IsLord)?.LeaderHero?.CharacterObject
+                ?? settlement.Town?.Governor?.CharacterObject
+                ?? settlement.Town?.GetDefenderParties(MapEvent.BattleTypes.None).FirstOrDefault(p => p.LeaderHero != null)?.LeaderHero?.CharacterObject
+                ?? settlement.Town?.GarrisonPartyComponent?.Leader?.CharacterObject
+                ?? settlement.Town?.GarrisonPartyComponent?.PartyOwner?.CharacterObject
+                ?? (settlement.Owner?.IsPrisoner == false ? settlement.Owner.CharacterObject : null)
+                ?? (settlement.OwnerClan?.Leader?.IsPrisoner == false ? settlement.OwnerClan.Leader.CharacterObject : null)
+                ?? settlement.MapFaction?.Leader?.CharacterObject
+                ?? settlement.OwnerClan?.AliveLords?.FirstOrDefault(h => h != null && h.IsAlive && !h.IsChild)?.CharacterObject
+                ?? settlement.Notables.FirstOrDefault()?.CharacterObject;
+
+            return heroRepresentative;
         }
 
         private void OnInquiryRejected(Settlement settlement)
@@ -239,7 +309,7 @@ namespace JGUM.Behaviors
                 Hero.MainHero.SetTraitLevel(DefaultTraits.Mercy, currentMercy - 1);
 
             var targetSettlement = settlement ?? SurrenderDialogContext.SurrenderingSettlement;
-            if (targetSettlement != null && targetSettlement.IsStarving)
+            if (JgumSettingsManager.EnableSiegeStarvationSallyOut && targetSettlement != null && targetSettlement.IsStarving)
             {
                 StartStarvationSallyOut(targetSettlement);
             }
@@ -251,50 +321,7 @@ namespace JGUM.Behaviors
             return playerParty != null && settlement.SiegeEvent?.BesiegerCamp.HasInvolvedPartyForEventType(playerParty) == true;
         }
 
-        private static ConversationCharacterData BuildCivilianConversationData(CharacterObject character)
-        {
-            var conversationDataType = typeof(ConversationCharacterData);
-            foreach (var ctor in conversationDataType.GetConstructors())
-            {
-                var parameters = ctor.GetParameters();
-                if (parameters.Length == 0 || parameters[0].ParameterType != typeof(CharacterObject))
-                    continue;
 
-                object?[] args = new object?[parameters.Length];
-                args[0] = character;
-                bool assignedCivilianFlag = false;
-
-                for (int i = 1; i < parameters.Length; i++)
-                {
-                    var parameter = parameters[i];
-                    if (!assignedCivilianFlag && parameter.ParameterType == typeof(bool))
-                    {
-                        // Prefer civilian outfit when opening surrender talks.
-                        args[i] = true;
-                        assignedCivilianFlag = true;
-                        continue;
-                    }
-
-                    if (parameter.HasDefaultValue)
-                    {
-                        args[i] = parameter.DefaultValue;
-                        continue;
-                    }
-
-                    args[i] = parameter.ParameterType.IsValueType
-                        ? System.Activator.CreateInstance(parameter.ParameterType)
-                        : null;
-                }
-
-                if (!assignedCivilianFlag)
-                    continue;
-
-                if (ctor.Invoke(args) is ConversationCharacterData data)
-                    return data;
-            }
-
-            return new ConversationCharacterData(character);
-        }
 
         private static void StartStarvationSallyOut(Settlement settlement)
         {

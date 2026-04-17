@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using JGUM.Calculators;
 using Newtonsoft.Json;
 using TaleWorlds.Library;
 
@@ -16,6 +17,7 @@ namespace JGUM.Config
         private const string ConfigFileName = "config.json";
 #endif
 
+        
         public static float SurrenderTendencyMultiplier => SettingsOrDefault().SurrenderTendencyMultiplier;
         public static float BaseSurrenderThreshold => SettingsOrDefault().BaseSurrenderThreshold;
         public static float PlayerMercyMultiplier => SettingsOrDefault().PlayerMercyMultiplier;
@@ -25,6 +27,13 @@ namespace JGUM.Config
         public static float LordHonorMultiplier => SettingsOrDefault().LordHonorMultiplier;
         public static float NearbyEnemyLordStrengthPercentage => SettingsOrDefault().NearbyEnemyLordStrengthPercentage;
         public static int RequiredSurrenderCount => SettingsOrDefault().RequiredSurrenderCount;
+        public static bool EnableSiegeSurrender => SettingsOrDefault().EnableSiegeSurrender;
+        public static bool EnableSiegeStarvationSallyOut => SettingsOrDefault().EnableSiegeStarvationSallyOut;
+        public static bool EnableLordSurrender => SettingsOrDefault().EnableLordSurrender;
+        public static bool EnablePatrolSurrender => SettingsOrDefault().EnablePatrolSurrender;
+        public static float NearbyEnemyLordDetectionRange => SettingsOrDefault().NearbyEnemyLordDetectionRange;
+        public static int LordDialogPriority => SettingsOrDefault().LordDialogPriority;
+        public static int PatrolDialogPriority => SettingsOrDefault().PatrolDialogPriority;
 
         public static void Initialize()
         {
@@ -89,12 +98,19 @@ namespace JGUM.Config
                 SurrenderTendencyMultiplier = mcm.SurrenderTendencyMultiplier,
                 BaseSurrenderThreshold = mcm.BaseSurrenderThreshold,
                 PlayerMercyMultiplier = mcm.PlayerMercyMultiplier,
+                RequiredSurrenderCount = mcm.RequiredSurrenderCount,
+                EnableSiegeSurrender = mcm.EnableSiegeSurrender,
+                EnableSiegeStarvationSallyOut = mcm.EnableSiegeStarvationSallyOut,
+                NearbyEnemyLordStrengthPercentage = mcm.NearbyEnemyLordStrengthPercentage,
+                NearbyEnemyLordDetectionRange = mcm.NearbyEnemyLordDetectionRange,
+                EnableLordSurrender = mcm.EnableLordSurrender,
+                LordDialogPriority = mcm.LordDialogPriority,
+                EnablePatrolSurrender = mcm.EnablePatrolSurrender,
+                PatrolDialogPriority = mcm.PatrolDialogPriority,
                 LordCalculatingMultiplier = mcm.LordCalculatingMultiplier,
                 LordValorMultiplier = mcm.LordValorMultiplier,
                 LordMercyMultiplier = mcm.LordMercyMultiplier,
-                LordHonorMultiplier = mcm.LordHonorMultiplier,
-                NearbyEnemyLordStrengthPercentage = mcm.NearbyEnemyLordStrengthPercentage,
-                RequiredSurrenderCount = mcm.RequiredSurrenderCount
+                LordHonorMultiplier = mcm.LordHonorMultiplier
             };
         }
 #else

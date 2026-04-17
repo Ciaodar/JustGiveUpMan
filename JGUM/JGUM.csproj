@@ -55,11 +55,13 @@
   </PropertyGroup>
 
   <ItemGroup Condition="'$(Configuration)'=='Debug_MCM' Or '$(Configuration)'=='Release_MCM'">
-    <Reference Include="MCM.UI.Adapter.MCMv5">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCM.UI.Adapter.MCMv5.dll</HintPath>
-    </Reference>
     <Reference Include="MCMv5">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\XorberaxLegacy\bin\Gaming.Desktop.x64_Shipping_Client\MCMv5.dll</HintPath>
+      <HintPath>$(GameFolder)\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCMv5.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="MCMv5.UI">
+      <HintPath>$(GameFolder)\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCM.UI.Adapter.MCMv5.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
 

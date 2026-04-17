@@ -32,11 +32,16 @@ namespace JGUM.Behaviors
 
         private void OnSessionLaunched(CampaignGameStarter campaignGameStarter)
         {
+            if (!JGUM.Config.JgumSettingsManager.EnablePatrolSurrender)
+                return;
+
             AddPatrolEncounterDialogs(campaignGameStarter);
         }
 
         private void AddPatrolEncounterDialogs(CampaignGameStarter starter)
         {
+            int priority = JGUM.Config.JgumSettingsManager.PatrolDialogPriority;
+
             starter.AddDialogLine(
                 "jgum_patrol_surrender_offer",
                 "patrol_talk_start_attack",
@@ -44,7 +49,7 @@ namespace JGUM.Behaviors
                 StringCalculator.GetString("jgum_field_surrender_offer", "STOP, We cannot fight you. We surrender!"),
                 CheckPatrolEncounterSurrender,
                 null,
-                10000);
+                priority);
             
             starter.AddDialogLine(
                 "jgum_patrol_surrender_offer_attack_final",
@@ -53,7 +58,7 @@ namespace JGUM.Behaviors
                 StringCalculator.GetString("jgum_field_surrender_offer", "STOP, We cannot fight you. We surrender!"),
                 CheckPatrolEncounterSurrender,
                 null,
-                10000);
+                priority);
 
             starter.AddPlayerLine(
                 "jgum_patrol_surrender_accept",
@@ -74,6 +79,9 @@ namespace JGUM.Behaviors
 
         private bool CheckPatrolEncounterSurrender()
         {
+            if (!JGUM.Config.JgumSettingsManager.EnablePatrolSurrender)
+                return false;
+
             var encounter = PlayerEncounter.Current;
             var mainParty = MobileParty.MainParty?.Party;
             var enemyParty = PlayerEncounter.EncounteredParty;
@@ -158,4 +166,3 @@ namespace JGUM.Behaviors
         }
     }
 }
-

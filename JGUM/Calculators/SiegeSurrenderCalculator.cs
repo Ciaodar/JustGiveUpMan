@@ -4,18 +4,23 @@ using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using JGUM.Config;
+using TaleWorlds.CampaignSystem.Extensions;
+using TaleWorlds.Core;
 
 namespace JGUM.Calculators
 {
     public class SiegeSurrenderCalculator
     {
-        public bool ShouldSettlementSurrender(Settlement? settlement, float configTendency)
+        public bool ShouldSettlementSurrender(Settlement? settlement)
         {
+            if (!JgumSettingsManager.EnableSiegeSurrender)
+                return false;
+
             if (settlement?.Town == null || !settlement.IsUnderSiege || settlement.SiegeEvent == null)
                 return false;
 
             // Food status check: Settlement will not surrender if not starving.
-            if (!settlement.IsStarving)
+            if (!settlement.IsStarving || settlement.Town.FoodStocks > 0)
                 return false;
 
             var siegeEvent = settlement.SiegeEvent;
@@ -75,7 +80,7 @@ namespace JGUM.Calculators
             // Formula: (Power Ratio + Morale Ratio) - (Lord Count * 0.1) + Trait Effect > Base Surrender Threshold * Config Tendency
             // Note: Lords make defense more stubborn, so we subtract them.
             float totalRatio = (powerRatio) - (lordCount * 0.1f) + traitEffect;
-            float threshold = JgumSettingsManager.BaseSurrenderThreshold / configTendency;
+            float threshold = JgumSettingsManager.BaseSurrenderThreshold * JgumSettingsManager.SurrenderTendencyMultiplier;
 
             return totalRatio > threshold;
         }
@@ -90,7 +95,7 @@ namespace JGUM.Calculators
                 return 0f;
 
             var settlementPosition = settlement!.GatePosition;
-            var detectionRange = 7f; // Was configurable but found out the exact need.
+            var detectionRange = JgumSettingsManager.NearbyEnemyLordDetectionRange;
             var strengthPercentage = JgumSettingsManager.NearbyEnemyLordStrengthPercentage / 100f;
 
             if (detectionRange <= 0f || strengthPercentage <= 0f)
@@ -123,7 +128,7 @@ namespace JGUM.Calculators
             if (settlementFaction == null)
                 return new System.Collections.Generic.List<PartyBase>();
 
-            var detectionRange = 7f;
+            var detectionRange = JgumSettingsManager.NearbyEnemyLordDetectionRange;
             var settlementPosition = settlement.GatePosition;
 
             return MobileParty.All

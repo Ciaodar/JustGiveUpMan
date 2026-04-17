@@ -39,18 +39,23 @@ namespace JGUM.Behaviors
 
         private void OnSessionLaunched(CampaignGameStarter campaignGameStarter)
         {
+            if (!JgumSettingsManager.EnableLordSurrender)
+                return;
+
             AddLordEncounterDialogs(campaignGameStarter);
         }
 
         private void AddLordEncounterDialogs(CampaignGameStarter starter)
         {
+            int priority = JgumSettingsManager.LordDialogPriority;
+
             // Intercept native dialog outputs to inject surrender option with high priority
             // Input from: lord_attack_verify_commit or player_threatens_enemy_lord tokens
             starter.AddDialogLine("jgum_lord_surrender_offer", "lord_attack_verify_commit", "jgum_lord_player_response",
                 StringCalculator.GetString("jgum_field_surrender_offer", "STOP, We cannot fight you. We surrender!"),
                 CheckLordEncounterSurrender,
                 null,
-                10000  // High priority to intercept before native responses
+                priority
             );
 //party_encounter_lord_hostile_attacker_3
             // Alternative input token for different dialog paths
@@ -58,7 +63,7 @@ namespace JGUM.Behaviors
                 StringCalculator.GetString("jgum_field_surrender_offer", "STOP, We cannot fight you. We surrender!"),
                 CheckLordEncounterSurrender,
                 null,
-                10000  // High priority
+                priority
             );
 
             
@@ -66,7 +71,7 @@ namespace JGUM.Behaviors
                 StringCalculator.GetString("jgum_field_surrender_offer", "STOP, We cannot fight you. We surrender!"),
                 CheckLordEncounterSurrender,
                 null,
-                10000  // High priority patrol_talk_start_attack
+                priority
             );
 
             // Player accepts surrender
@@ -86,6 +91,9 @@ namespace JGUM.Behaviors
 
         private bool CheckLordEncounterSurrender()
         {
+            if (!JgumSettingsManager.EnableLordSurrender)
+                return false;
+
             // Get the current conversation lord
             var conversationHero = Campaign.Current.ConversationManager.OneToOneConversationHero;
             if (conversationHero == null)
@@ -309,3 +317,4 @@ namespace JGUM.Behaviors
         }
     }
 }
+

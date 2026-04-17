@@ -1,9 +1,16 @@
 ﻿<Module>
   <Name value="Just Give Up Man!" />
   <Id value="JGUM" />
-  <Version value="v0.6.11.247" />
+  <Version value="b0.6.16.1" />
+
+  <Url value="https://www.nexusmods.com/mountandblade2bannerlord/mods/10709" />
+  <UpdateInfo>
+    <UpdateInfoClass value="NexusMod" />
+    <UpdateInfoId value="10709" /> </UpdateInfo>
+
   <SingleplayerModule value="true" />
   <MultiplayerModule value="false" />
+
   <DependedModules>
     <DependedModule Id="Native" />
     <DependedModule Id="SandBoxCore" />
@@ -11,6 +18,7 @@
     <DependedModule Id="CustomBattle" />
     <DependedModule Id="StoryMode" />
   </DependedModules>
+
   <SubModules>
     <SubModule>
       <Name value="JGUM" />
@@ -23,4 +31,3 @@
   </SubModules>
   <Xmls/>
 </Module>
-

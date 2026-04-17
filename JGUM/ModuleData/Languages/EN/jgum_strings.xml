@@ -13,9 +13,9 @@
     <string id="jgum_field_surrender_reject_count" text="1" />
 
     
-    <!-- {?CONVERSATION_NPC.GENDER}madame{?}sir{\\?} -->
+    <!-- {?CONVERSATION_NPC.GENDER}madame{?}sir{\?} -->
     <!-- Siege Surrender Dialogs -->
-    <string id="jgum_siege_defender_greeting" text="Thank you for coming, My {?CONVERSATION_NPC.GENDER}Lady{?}Lord{\\?}." />
+    <string id="jgum_siege_defender_greeting" text="Thank you for coming, my {?PLAYER.GENDER}madame{?}sir{\?}." />
     <string id="jgum_siege_player_siege_surrender_offer" text="I see your situation is dire. Do you want to surrender and spare your people from further suffering?" />
     <string id="jgum_siege_surrender_offer_1" text="We are starving to death. The city is yours." />
     <string id="jgum_siege_surrender_offer_2" text="We can't hold on any longer. Please have mercy, the castle is yours." />
@@ -41,6 +41,8 @@
 
     <!-- UI Strings -->
     <string id="jgum_siege_surrender_notification" text="{SETTLEMENT_NAME} wants to negotiate surrender with you." />
+    <string id="jgum_siege_surrender_notification_town" text="The commander of {SETTLEMENT_NAME} wants to negotiate surrender with you." />
+    <string id="jgum_siege_surrender_notification_castle" text="The castellan of {SETTLEMENT_NAME} wants to negotiate surrender with you." />
     <string id="jgum_siege_inquiry_title" text="Surrender Negotiation" />
     <string id="jgum_siege_inquiry_accept" text="Accept Meeting" />
     <string id="jgum_siege_inquiry_reject" text="Reject Offer" />
@@ -48,24 +50,59 @@
     <string id="jgum_siege_starvation_sally_out" text="The starving defenders have launched a desperate sally out!" />
 
     <!-- Settings -->
-    <string id="JGUM.Settings.SiegeSettings.Name" text="Siege Settings" />
+    <string id="JGUM.Settings.DisplayName" text="Just Give Up Man" />
+
+    <string id="JGUM.Settings.Group.Common" text="Common" />
+    <string id="JGUM.Settings.Group.Siege" text="Siege" />
+    <string id="JGUM.Settings.Group.Lord" text="Lord" />
+    <string id="JGUM.Settings.Group.Patrol" text="Patrol" />
+
     <string id="JGUM.Settings.SurrenderTendencyMultiplier.Name" text="General Surrender Tendency" />
-    <string id="JGUM.Settings.SurrenderTendencyMultiplier.Hint" text="Overall multiplier for the surrender chance. Higher values make surrenders more likely." />
+    <string id="JGUM.Settings.SurrenderTendencyMultiplier.Hint" text="Overall multiplier for surrender checks." />
+
     <string id="JGUM.Settings.BaseSurrenderThreshold.Name" text="Base Surrender Threshold" />
-    <string id="JGUM.Settings.BaseSurrenderThreshold.Hint" text="Base value for the surrender calculation. Higher values make surrenders less likely. Default is 2.5." />
+    <string id="JGUM.Settings.BaseSurrenderThreshold.Hint" text="Higher values make surrender harder." />
+
     <string id="JGUM.Settings.PlayerMercyMultiplier.Name" text="Player Mercy Multiplier" />
-    <string id="JGUM.Settings.PlayerMercyMultiplier.Hint" text="Multiplier for the player's Mercy/Cruelty trait effect. 100 is default. 0 disables it. 200 doubles it." />
-    <string id="JGUM.Settings.LordCalculatingMultiplier.Name" text="Calculating Trait Multiplier" />
-    <string id="JGUM.Settings.LordCalculatingMultiplier.Hint" text="Multiplier for the defending lords' 'Calculating' trait. 100 is default." />
-    <string id="JGUM.Settings.LordValorMultiplier.Name" text="Valor Trait Multiplier" />
-    <string id="JGUM.Settings.LordValorMultiplier.Hint" text="Multiplier for the defending lords' 'Valor' trait. 100 is default." />
-    <string id="JGUM.Settings.LordMercyMultiplier.Name" text="Mercy Trait Multiplier" />
-    <string id="JGUM.Settings.LordMercyMultiplier.Hint" text="Multiplier for the defending lords' 'Mercy' trait. 100 is default." />
-    <string id="JGUM.Settings.LordHonorMultiplier.Name" text="Honor Trait Multiplier" />
-    <string id="JGUM.Settings.LordHonorMultiplier.Hint" text="Multiplier for the defending lords' 'Honor' trait. 100 is default." />
+    <string id="JGUM.Settings.PlayerMercyMultiplier.Hint" text="Scales player Mercy/Cruelty effect." />
+
+    <string id="JGUM.Settings.RequiredSurrenderCount.Name" text="Required Surrender Count" />
+    <string id="JGUM.Settings.RequiredSurrenderCount.Hint" text="Accepted surrender count before mercy trait gain." />
+
+    <string id="JGUM.Settings.EnableSiegeSurrender.Name" text="Enable Siege Surrender" />
+    <string id="JGUM.Settings.EnableSiegeSurrender.Hint" text="Enable settlement surrender checks during sieges." />
+
+    <string id="JGUM.Settings.EnableSiegeStarvationSallyOut.Name" text="Enable Starvation Sally Out" />
+    <string id="JGUM.Settings.EnableSiegeStarvationSallyOut.Hint" text="If no surrender, starving defenders can sally out." />
+
     <string id="JGUM.Settings.NearbyEnemyLordStrengthPercentage.Name" text="Nearby Enemy Lord Strength (%)" />
-    <string id="JGUM.Settings.NearbyEnemyLordStrengthPercentage.Hint" text="Percentage of nearby enemy lord strength to add to defender power. Higher values make defenders see enemy lords as threatening. Default 50%." />
-    <string id="JGUM.Settings.NearbyEnemyLordDetectionRange.Name" text="Enemy Lord Detection Range" />
-    <string id="JGUM.Settings.NearbyEnemyLordDetectionRange.Hint" text="How far away (in map distance) to detect enemy lords gathering nearby. Default is 50." />
+    <string id="JGUM.Settings.NearbyEnemyLordStrengthPercentage.Hint" text="Added percentage from nearby hostile lords." />
+
+    <string id="JGUM.Settings.NearbyEnemyLordDetectionRange.Name" text="Nearby Lord Detection Range" />
+    <string id="JGUM.Settings.NearbyEnemyLordDetectionRange.Hint" text="Map distance used for nearby lord checks around settlement." />
+
+    <string id="JGUM.Settings.EnableLordSurrender.Name" text="Enable Lord Surrender" />
+    <string id="JGUM.Settings.EnableLordSurrender.Hint" text="Enable surrender dialogs in hostile lord encounters." />
+
+    <string id="JGUM.Settings.LordDialogPriority.Name" text="Lord Dialog Priority" />
+    <string id="JGUM.Settings.LordDialogPriority.Hint" text="Conversation override priority for lord surrender lines." />
+
+    <string id="JGUM.Settings.LordCalculatingMultiplier.Name" text="Calculating Trait Multiplier" />
+    <string id="JGUM.Settings.LordCalculatingMultiplier.Hint" text="Multiplier for Calculating trait impact in surrender formula." />
+
+    <string id="JGUM.Settings.LordValorMultiplier.Name" text="Valor Trait Multiplier" />
+    <string id="JGUM.Settings.LordValorMultiplier.Hint" text="Multiplier for Valor trait impact in surrender formula." />
+
+    <string id="JGUM.Settings.LordMercyMultiplier.Name" text="Mercy Trait Multiplier" />
+    <string id="JGUM.Settings.LordMercyMultiplier.Hint" text="Multiplier for Mercy trait impact in surrender formula." />
+
+    <string id="JGUM.Settings.LordHonorMultiplier.Name" text="Honor Trait Multiplier" />
+    <string id="JGUM.Settings.LordHonorMultiplier.Hint" text="Multiplier for Honor trait impact in surrender formula." />
+
+    <string id="JGUM.Settings.EnablePatrolSurrender.Name" text="Enable Patrol Surrender" />
+    <string id="JGUM.Settings.EnablePatrolSurrender.Hint" text="Enable surrender dialogs for patrol/non-lord hostile encounters." />
+
+    <string id="JGUM.Settings.PatrolDialogPriority.Name" text="Patrol Dialog Priority" />
+    <string id="JGUM.Settings.PatrolDialogPriority.Hint" text="Conversation override priority for patrol surrender lines." />
   </strings>
 </base>
