@@ -1,7 +1,7 @@
 ﻿<Module>
   <Name value="Just Give Up Man!" />
   <Id value="JGUM" />
-  <Version value="b0.6.16.1" />
+  <Version value="b0.7.16.1" />
   <SingleplayerModule value="true" />
   <MultiplayerModule value="false" />
   <DependedModules>
