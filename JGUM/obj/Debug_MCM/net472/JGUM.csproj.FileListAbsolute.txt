@@ -1,0 +1,8 @@
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\bin\Debug_MCM\net472\JGUM.dll
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\bin\Debug_MCM\net472\JGUM.pdb
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\obj\Debug_MCM\net472\JGUM.csproj.AssemblyReference.cache
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\obj\Debug_MCM\net472\JGUM.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\obj\Debug_MCM\net472\JGUM.csproj.CoreCompileInputs.cache
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\obj\Debug_MCM\net472\JGUM.sourcelink.json
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\obj\Debug_MCM\net472\JGUM.dll
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM\obj\Debug_MCM\net472\JGUM.pdb

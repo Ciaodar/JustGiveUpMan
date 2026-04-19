@@ -48,9 +48,9 @@ namespace JGUM.Behaviors
             if (JgumSettingsManager.EnableSiegeSurrender)
                 AddDialogs(campaignGameStarter);
         }
-
         private void AddDialogs(CampaignGameStarter starter)
         {
+
             starter.AddDialogLine("jgum_siege_defender_start", "start", "jgum_player_start",
                 StringCalculator.GetString("jgum_siege_defender_greeting","Thank you for coming, my {?PLAYER.GENDER}madame{?}sir{\\?}."),
                 SurrenderCondition,

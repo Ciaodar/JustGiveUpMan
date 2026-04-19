@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using JGUM.Calculators;
 using Newtonsoft.Json;
 using TaleWorlds.Library;
 
@@ -26,6 +25,10 @@ namespace JGUM.Config
         public static float LordMercyMultiplier => SettingsOrDefault().LordMercyMultiplier;
         public static float LordHonorMultiplier => SettingsOrDefault().LordHonorMultiplier;
         public static float NearbyEnemyLordStrengthPercentage => SettingsOrDefault().NearbyEnemyLordStrengthPercentage;
+        public static float SiegeNegotiationEasyThreshold => SettingsOrDefault().SiegeNegotiationEasyThreshold;
+        public static float SiegeNegotiationNormalThreshold => SettingsOrDefault().SiegeNegotiationNormalThreshold;
+        public static float SiegeNegotiationHardThreshold => SettingsOrDefault().SiegeNegotiationHardThreshold;
+        public static int SiegeNegotiationRngPreset => SettingsOrDefault().SiegeNegotiationRngPreset;
         public static int RequiredSurrenderCount => SettingsOrDefault().RequiredSurrenderCount;
         public static bool EnableSiegeSurrender => SettingsOrDefault().EnableSiegeSurrender;
         public static bool EnableSiegeStarvationSallyOut => SettingsOrDefault().EnableSiegeStarvationSallyOut;
@@ -103,6 +106,10 @@ namespace JGUM.Config
                 EnableSiegeStarvationSallyOut = mcm.EnableSiegeStarvationSallyOut,
                 NearbyEnemyLordStrengthPercentage = mcm.NearbyEnemyLordStrengthPercentage,
                 NearbyEnemyLordDetectionRange = mcm.NearbyEnemyLordDetectionRange,
+                SiegeNegotiationEasyThreshold = mcm.SiegeNegotiationEasyThreshold,
+                SiegeNegotiationNormalThreshold = mcm.SiegeNegotiationNormalThreshold,
+                SiegeNegotiationHardThreshold = mcm.SiegeNegotiationHardThreshold,
+                SiegeNegotiationRngPreset = mcm.SiegeNegotiationRngPreset.SelectedIndex,
                 EnableLordSurrender = mcm.EnableLordSurrender,
                 LordDialogPriority = mcm.LordDialogPriority,
                 EnablePatrolSurrender = mcm.EnablePatrolSurrender,

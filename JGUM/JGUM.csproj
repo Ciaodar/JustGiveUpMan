@@ -100,6 +100,10 @@
     <Folder Include="Testing\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Behaviors\SiegeNegotiationBehavior.cs" />
+  </ItemGroup>
+
   <!-- Build counterpart configuration once so Shift+B yields both variants. -->
   <Target Name="BuildCounterpartVariant" AfterTargets="Build"
           Condition="'$(EnableDualVariantBuild)'=='true' and '$(IsDualBuildChild)'!='true' and '$(CounterpartConfiguration)'!=''">

@@ -3,6 +3,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using JGUM.Config;
+using SiegeNegotiation = JGUM.Behaviors.SiegeNegotiationBehavior;
 
 namespace JGUM
 {
@@ -38,6 +39,9 @@ namespace JGUM
 
                 // Add patrol encounter surrender behavior for non-lord hostile patrol encounters.
                 campaignStarter.AddBehavior(new Behaviors.PatrolEncounterSurrenderBehavior());
+
+                // Add proactive siege negotiation behavior (menu button + delayed response + persuasion flow).
+                campaignStarter.AddBehavior(new SiegeNegotiation.SiegeNegotiationBehavior());
             }
         }
     }

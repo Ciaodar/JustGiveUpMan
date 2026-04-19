@@ -1,5 +1,6 @@
 ﻿#if USE_MCM
 using JGUM.Calculators;
+using MCM.Common;
 using MCM.Abstractions.Attributes;
 using MCM.Abstractions.Attributes.v2;
 using MCM.Abstractions.Base.Global;
@@ -8,6 +9,13 @@ namespace JGUM.Config
 {
     public class JgumMcmSettings : AttributeGlobalSettings<JgumMcmSettings>
     {
+        public enum SiegeNegotiationRngPresetOption
+        {
+            Off,
+            Medium,
+            High
+        }
+
         public override string Id => "JGUMSettings";
         public override string DisplayName => StringCalculator.GetString("JGUM.Settings.DisplayName", "Just Give Up Man!");
 
@@ -45,6 +53,28 @@ namespace JGUM.Config
         [SettingPropertyFloatingInteger("{=JGUM.Settings.NearbyEnemyLordDetectionRange.Name}Nearby Lord Detection Range", 0f, 20f, "0.0", Order = 3, RequireRestart = false, HintText = "{=JGUM.Settings.NearbyEnemyLordDetectionRange.Hint}Map distance used for nearby lord checks around settlement.")]
         [SettingPropertyGroup("{=JGUM.Settings.Group.Siege}Siege")]
         public float NearbyEnemyLordDetectionRange { get; set; } = 7f;
+
+        [SettingPropertyFloatingInteger("{=JGUM.Settings.SiegeNegotiationEasyThreshold.Name}Negotiation Easy Threshold", 0f, 10f, "0.00", Order = 4, RequireRestart = false, HintText = "{=JGUM.Settings.SiegeNegotiationEasyThreshold.Hint}Power ratio needed for Easy persuasion strength.")]
+        [SettingPropertyGroup("{=JGUM.Settings.Group.Siege}Siege")]
+        public float SiegeNegotiationEasyThreshold { get; set; } = 3.0f;
+
+        [SettingPropertyFloatingInteger("{=JGUM.Settings.SiegeNegotiationNormalThreshold.Name}Negotiation Normal Threshold", 0f, 10f, "0.00", Order = 5, RequireRestart = false, HintText = "{=JGUM.Settings.SiegeNegotiationNormalThreshold.Hint}Power ratio needed for Normal persuasion strength.")]
+        [SettingPropertyGroup("{=JGUM.Settings.Group.Siege}Siege")]
+        public float SiegeNegotiationNormalThreshold { get; set; } = 2.2f;
+
+        [SettingPropertyFloatingInteger("{=JGUM.Settings.SiegeNegotiationHardThreshold.Name}Negotiation Hard Threshold", 0f, 10f, "0.00", Order = 6, RequireRestart = false, HintText = "{=JGUM.Settings.SiegeNegotiationHardThreshold.Hint}Power ratio needed for Hard persuasion strength.")]
+        [SettingPropertyGroup("{=JGUM.Settings.Group.Siege}Siege")]
+        public float SiegeNegotiationHardThreshold { get; set; } = 1.6f;
+
+        [SettingPropertyDropdown("{=JGUM.Settings.SiegeNegotiationRngPreset.Name}Persuasion RNG Preset", Order = 7, RequireRestart = false, HintText = "{=JGUM.Settings.SiegeNegotiationRngPreset.Hint}Controls random variation in persuasion option chances.")]
+        [SettingPropertyGroup("{=JGUM.Settings.Group.Siege}Siege")]
+        public Dropdown<SiegeNegotiationRngPresetOption> SiegeNegotiationRngPreset { get; set; } =
+            new Dropdown<SiegeNegotiationRngPresetOption>(new[]
+            {
+                SiegeNegotiationRngPresetOption.Off,
+                SiegeNegotiationRngPresetOption.Medium,
+                SiegeNegotiationRngPresetOption.High
+            }, 1);
 
         [SettingPropertyBool("{=JGUM.Settings.EnableLordSurrender.Name}Enable Lord Surrender", Order = 0, RequireRestart = false, HintText = "{=JGUM.Settings.EnableLordSurrender.Hint}Enable surrender dialogs in hostile lord encounters.")]
         [SettingPropertyGroup("{=JGUM.Settings.Group.Lord}Lord")]

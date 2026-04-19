@@ -47,6 +47,47 @@
     <string id="jgum_siege_assault_triggered" text="Açlık savunmayı çökertti; kuşatma artık açık savaşa dönüştü!" />
     <string id="jgum_siege_starvation_sally_out" text="Açlıktan kırılan savunmacılar çaresiz bir huruç harekâtı başlattı!" />
 
+    <string id="jgum_siege_negotiation_menu_option" text="Müzakere Toplantısı Teklif Et" />
+    <string id="jgum_siege_negotiation_menu_tooltip_pending" text="Önceki talebin için hâlâ cevap bekleniyor." />
+    <string id="jgum_siege_negotiation_menu_tooltip_cooldown" text="Kısa süre önce müzakere talebi gönderdin. Tekrar göndermek için beklemelisin." />
+    <string id="jgum_siege_negotiation_menu_tooltip_retry" text="Başarısız iknadan sonra yeniden denemek için biraz beklemelisin." />
+    <string id="jgum_siege_negotiation_request_sent" text="Habercin gönderildi. Yakında bir yanıt alacaksın." />
+    <string id="jgum_siege_negotiation_inquiry_title" text="Müzakere Yanıtı" />
+    <string id="jgum_siege_negotiation_inquiry_accepted" text="Teklifin kabul edildi. Görüşmek için bir temsilci hazır." />
+    <string id="jgum_siege_negotiation_inquiry_rejected" text="Teklifin reddedildi. Savunmacılar konumunun yeterince güçlü olmadığını düşünüyor." />
+    <string id="jgum_siege_negotiation_inquiry_go" text="Buluşmaya git" />
+    <string id="jgum_siege_negotiation_inquiry_ok" text="Tamam" />
+
+
+    <!-- Siege Persuasion -->
+    <string id="jgum_proactive_intro" text="Seni dinliyoruz. Şartlarını söyle.[ib:nervous][if:convo_grave]" />
+    <string id="jgum_proactive_player_open" text="Daha fazla kan dökülmesine gerek yok. Beni dinle." />
+    <string id="jgum_proactive_task_line" text="Bu surların kaderi, sözlerinin ağırlığına bağlı." />
+    <string id="jgum_proactive_task_fail_immediate" text="Bu pek ikna edici değil." />
+    <string id="jgum_proactive_task_fail_final" text="Sözlerin yeterli değil. Reddediyoruz." />
+    <string id="jgum_proactive_option_1" text="Halkının umutsuz bir savunma için ölmesi gerekmiyor." />
+    <string id="jgum_proactive_option_2" text="Güç dengesine bak. Bu kuşatma zaten karara bağlandı." />
+    <string id="jgum_proactive_option_3" text="Teslim olursan halkın yaşayacak." />
+    <string id="jgum_proactive_option_t1_1" text="Umutsuz bir savunma uğruna halkının ölmesine gerek yok." />
+    <string id="jgum_proactive_option_t1_2" text="Sayılara bak. Bu kuşatmanın sonucu zaten belli." />
+    <string id="jgum_proactive_option_t1_3" text="Onurlu olanı seç; halkını korumak için teslim ol." />
+    <string id="jgum_proactive_option_t2_1" text="Surların kırılıyor; uzatmak sadece daha çok can yakar." />
+    <string id="jgum_proactive_option_t2_2" text="Bu hücuma dönerse elindeki son pazarlık gücünü de kaybedersin." />
+    <string id="jgum_proactive_option_t2_3" text="Kapıları açarsan sivillerinin düzenini ve güvenliğini korurum." />
+    <string id="jgum_proactive_option_t3_1" text="Antlaşmayla teslim olmak, tüm Kalradya önünde onurunu korur." />
+    <string id="jgum_proactive_option_t3_2" text="Erzakın ve moralin düşüyor; benim üstünlüğüm ise büyüyor." />
+    <string id="jgum_proactive_option_t3_3" text="Gurur uğruna can verme; bunu merhametle burada bitirelim." />
+    <string id="jgum_proactive_option_t4_1" text="Bir şehir, harabelerle değil insanlarıyla ayakta kalır." />
+    <string id="jgum_proactive_option_t4_2" text="Şimdi teslim olursan pazarlar yanmaz, hayat yeniden başlar." />
+    <string id="jgum_proactive_option_t4_3" text="Teslim ol; tarih seni katliamla değil itidalle hatırlasın." />
+    <string id="jgum_proactive_option_locked_used" text="Bu argüman artık kullanılamaz." />
+    <string id="jgum_proactive_option_locked_mercy" text="Bu argümanı kurmak için Merhamet özelliğin çok düşük." />
+    <string id="jgum_proactive_option_locked_honor" text="Bu argümanı kurmak için Onur özelliğin çok düşük." />
+    <string id="jgum_proactive_option_locked_calculating" text="Bu argüman için daha hesapçı bir yaklaşım gerekir." />
+    <string id="jgum_proactive_success" text="Haklısın, daha fazla kan dökülmesine gerek yok." />
+    <string id="jgum_proactive_fail" text="Hayır. Teslim olmayacağız." />
+    <string id="jgum_proactive_continue" text="Daha fazlasını duymam gerekiyor." />
+
     <!-- Settings -->
     <string id="JGUM.Settings.DisplayName" text="Just Give Up Man" />
 
@@ -78,6 +119,21 @@
 
     <string id="JGUM.Settings.NearbyEnemyLordDetectionRange.Name" text="Yakın Lord Algılama Menzili" />
     <string id="JGUM.Settings.NearbyEnemyLordDetectionRange.Hint" text="Yerleşim çevresinde yakın lord kontrolü için kullanılacak harita mesafesi." />
+
+    <string id="JGUM.Settings.SiegeNegotiationEasyThreshold.Name" text="Müzakere Kolay Eşiği" />
+    <string id="JGUM.Settings.SiegeNegotiationEasyThreshold.Hint" text="Kolay ikna gücüne geçmek için gereken güç oranı." />
+
+    <string id="JGUM.Settings.SiegeNegotiationNormalThreshold.Name" text="Müzakere Normal Eşiği" />
+    <string id="JGUM.Settings.SiegeNegotiationNormalThreshold.Hint" text="Normal ikna gücüne geçmek için gereken güç oranı." />
+
+    <string id="JGUM.Settings.SiegeNegotiationHardThreshold.Name" text="Müzakere Zor Eşiği" />
+    <string id="JGUM.Settings.SiegeNegotiationHardThreshold.Hint" text="Zor ikna gücüne geçmek için gereken güç oranı." />
+
+    <string id="JGUM.Settings.SiegeNegotiationRngPreset.Name" text="İkna RNG Ön Ayarı" />
+    <string id="JGUM.Settings.SiegeNegotiationRngPreset.Hint" text="İkna seçeneklerinin şanslarında rastgele dalgalanmayı belirler." />
+    <string id="JGUM.Settings.SiegeNegotiationRngPreset.Off" text="Kapalı" />
+    <string id="JGUM.Settings.SiegeNegotiationRngPreset.Medium" text="Orta (+/-2)" />
+    <string id="JGUM.Settings.SiegeNegotiationRngPreset.High" text="Yüksek (+/-3)" />
 
     <string id="JGUM.Settings.EnableLordSurrender.Name" text="Lord Teslimiyetini Etkinleştir" />
     <string id="JGUM.Settings.EnableLordSurrender.Hint" text="Düşman lord karşılaşmalarında teslimiyet diyaloglarını açar." />

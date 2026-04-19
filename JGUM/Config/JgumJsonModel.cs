@@ -13,6 +13,10 @@
         public bool EnableSiegeStarvationSallyOut { get; set; } = true;
         public float NearbyEnemyLordStrengthPercentage { get; set; } = 50f;
         public float NearbyEnemyLordDetectionRange { get; set; } = 7f;
+        public float SiegeNegotiationEasyThreshold { get; set; } = 3.0f;
+        public float SiegeNegotiationNormalThreshold { get; set; } = 2.2f;
+        public float SiegeNegotiationHardThreshold { get; set; } = 1.6f;
+        public int SiegeNegotiationRngPreset { get; set; } = 1;
 
         // Lord
         public bool EnableLordSurrender { get; set; } = true;

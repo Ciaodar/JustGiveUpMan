@@ -49,6 +49,45 @@
     <string id="jgum_siege_assault_triggered" text="Starvation has broken the siege stalemate; battle begins!" />
     <string id="jgum_siege_starvation_sally_out" text="The starving defenders have launched a desperate sally out!" />
 
+    <string id="jgum_siege_negotiation_menu_option" text="Offer a Negotiation Meeting" />
+    <string id="jgum_siege_negotiation_menu_tooltip_pending" text="Your previous request is still awaiting a response." />
+    <string id="jgum_siege_negotiation_menu_tooltip_cooldown" text="You recently sent a negotiation request. Wait before sending another." />
+    <string id="jgum_siege_negotiation_menu_tooltip_retry" text="You need to wait before trying negotiation again after a failed persuasion." />
+    <string id="jgum_siege_negotiation_request_sent" text="Your messenger has been sent. You will receive a response soon." />
+    <string id="jgum_siege_negotiation_inquiry_title" text="Negotiation Response" />
+    <string id="jgum_siege_negotiation_inquiry_accepted" text="Your proposal was accepted. A representative is ready to meet you." />
+    <string id="jgum_siege_negotiation_inquiry_rejected" text="Your proposal was rejected. The defenders do not believe your position is strong enough." />
+    <string id="jgum_siege_negotiation_inquiry_go" text="Go to meeting" />
+    <string id="jgum_siege_negotiation_inquiry_ok" text="OK" />
+
+    <string id="jgum_proactive_intro" text="We are listening. Speak your terms.[ib:nervous][if:convo_grave]" />
+    <string id="jgum_proactive_player_open" text="There is no need for more bloodshed. Hear me out." />
+    <string id="jgum_proactive_task_line" text="The fate of these walls rests on your words." />
+    <string id="jgum_proactive_task_fail_immediate" text="That is not convincing." />
+    <string id="jgum_proactive_task_fail_final" text="Your words are not enough. We refuse." />
+    <string id="jgum_proactive_option_1" text="Your people do not need to die for a hopeless defense." />
+    <string id="jgum_proactive_option_2" text="Look at the balance of power. This siege is already decided." />
+    <string id="jgum_proactive_option_3" text="Choose surrender, and your people can live." />
+    <string id="jgum_proactive_option_t1_1" text="Your people should not die in a hopeless defense." />
+    <string id="jgum_proactive_option_t1_2" text="Look at the numbers. This siege is already decided." />
+    <string id="jgum_proactive_option_t1_3" text="Choose the honorable path and spare your people." />
+    <string id="jgum_proactive_option_t2_1" text="Your walls are breaking. Prolonging this only wastes lives." />
+    <string id="jgum_proactive_option_t2_2" text="If this turns into an assault, you lose all leverage." />
+    <string id="jgum_proactive_option_t2_3" text="Open the gates and I will keep order over your civilians." />
+    <string id="jgum_proactive_option_t3_1" text="Surrender by treaty protects your honor before all Calradia." />
+    <string id="jgum_proactive_option_t3_2" text="Your supplies and morale decline while my advantage grows." />
+    <string id="jgum_proactive_option_t3_3" text="Do not trade lives for pride. End this with mercy." />
+    <string id="jgum_proactive_option_t4_1" text="A city survives by preserving people, not ruins." />
+    <string id="jgum_proactive_option_t4_2" text="Yield now and the markets reopen instead of burning." />
+    <string id="jgum_proactive_option_t4_3" text="Choose surrender, and history will remember restraint over slaughter." />
+    <string id="jgum_proactive_option_locked_used" text="This argument is no longer available." />
+    <string id="jgum_proactive_option_locked_mercy" text="Your Mercy is too low to make this argument." />
+    <string id="jgum_proactive_option_locked_honor" text="Your Honor is too low to make this argument." />
+    <string id="jgum_proactive_option_locked_calculating" text="You need a more calculating approach to make this argument." />
+    <string id="jgum_proactive_success" text="You are right, there's no need for blood to spill." />
+    <string id="jgum_proactive_fail" text="No. We will not yield." />
+    <string id="jgum_proactive_continue" text="I need to hear more." />
+
     <!-- Settings -->
     <string id="JGUM.Settings.DisplayName" text="Just Give Up Man" />
 
@@ -80,6 +119,21 @@
 
     <string id="JGUM.Settings.NearbyEnemyLordDetectionRange.Name" text="Nearby Lord Detection Range" />
     <string id="JGUM.Settings.NearbyEnemyLordDetectionRange.Hint" text="Map distance used for nearby lord checks around settlement." />
+
+    <string id="JGUM.Settings.SiegeNegotiationEasyThreshold.Name" text="Negotiation Easy Threshold" />
+    <string id="JGUM.Settings.SiegeNegotiationEasyThreshold.Hint" text="Power ratio needed for Easy persuasion strength." />
+
+    <string id="JGUM.Settings.SiegeNegotiationNormalThreshold.Name" text="Negotiation Normal Threshold" />
+    <string id="JGUM.Settings.SiegeNegotiationNormalThreshold.Hint" text="Power ratio needed for Normal persuasion strength." />
+
+    <string id="JGUM.Settings.SiegeNegotiationHardThreshold.Name" text="Negotiation Hard Threshold" />
+    <string id="JGUM.Settings.SiegeNegotiationHardThreshold.Hint" text="Power ratio needed for Hard persuasion strength." />
+
+    <string id="JGUM.Settings.SiegeNegotiationRngPreset.Name" text="Persuasion RNG Preset" />
+    <string id="JGUM.Settings.SiegeNegotiationRngPreset.Hint" text="Controls random variation in persuasion option chances." />
+    <string id="JGUM.Settings.SiegeNegotiationRngPreset.Off" text="Off" />
+    <string id="JGUM.Settings.SiegeNegotiationRngPreset.Medium" text="Medium (+/-2)" />
+    <string id="JGUM.Settings.SiegeNegotiationRngPreset.High" text="High (+/-3)" />
 
     <string id="JGUM.Settings.EnableLordSurrender.Name" text="Enable Lord Surrender" />
     <string id="JGUM.Settings.EnableLordSurrender.Hint" text="Enable surrender dialogs in hostile lord encounters." />
