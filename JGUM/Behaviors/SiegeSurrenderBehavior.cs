@@ -70,6 +70,7 @@ namespace JGUM.Behaviors
                 SurrenderCondition,
                 null
             );
+            
 
             // Player accepts surrender
             starter.AddPlayerLine("jgum_siege_player_accepts_surrender", "jgum_siege_player_surrender_response", "jgum_siege_merciful",

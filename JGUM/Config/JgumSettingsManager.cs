@@ -8,15 +8,11 @@ namespace JGUM.Config
 {
     public static class JgumSettingsManager
     {
-#if USE_MCM
-        private static JgumMcmSettings Settings => JgumMcmSettings.Instance!;
-#else
         private static readonly object SyncRoot = new object();
         private static JgumJsonModel _settings = new JgumJsonModel();
+        private static Func<JgumJsonModel>? _externalSettingsProvider;
         private const string ConfigFileName = "config.json";
-#endif
 
-        
         public static float SurrenderTendencyMultiplier => SettingsOrDefault().SurrenderTendencyMultiplier;
         public static float BaseSurrenderThreshold => SettingsOrDefault().BaseSurrenderThreshold;
         public static float PlayerMercyMultiplier => SettingsOrDefault().PlayerMercyMultiplier;
@@ -40,21 +36,36 @@ namespace JGUM.Config
 
         public static void Initialize()
         {
-#if USE_MCM
-            _ = JgumMcmSettings.Instance;
-#else
             Reload();
-#endif
+        }
+
+        public static void RegisterExternalSettingsProvider(Func<JgumJsonModel> provider)
+        {
+            lock (SyncRoot)
+            {
+                _externalSettingsProvider = provider;
+                Reload();
+            }
         }
 
         public static bool Reload()
         {
-#if USE_MCM
-            _ = JgumMcmSettings.Instance;
-            return true;
-#else
             lock (SyncRoot)
             {
+                if (_externalSettingsProvider != null)
+                {
+                    try
+                    {
+                        JgumJsonModel model = _externalSettingsProvider();
+                        _settings = model ?? new JgumJsonModel();
+                        return true;
+                    }
+                    catch
+                    {
+                        // Bridge provider failed; continue with JSON fallback.
+                    }
+                }
+
                 var defaults = new JgumJsonModel();
                 var configPath = GetConfigPath();
 
@@ -83,52 +94,18 @@ namespace JGUM.Config
                     }
                     catch
                     {
-                        // Ignored intentionally: manager falls back to in-memory defaults.
+                        // Keep in-memory defaults when write fails.
                     }
 
                     return false;
                 }
             }
-#endif
         }
 
-#if USE_MCM
-        private static JgumJsonModel SettingsOrDefault()
-        {
-            var mcm = Settings;
-            return new JgumJsonModel
-            {
-                SurrenderTendencyMultiplier = mcm.SurrenderTendencyMultiplier,
-                BaseSurrenderThreshold = mcm.BaseSurrenderThreshold,
-                PlayerMercyMultiplier = mcm.PlayerMercyMultiplier,
-                RequiredSurrenderCount = mcm.RequiredSurrenderCount,
-                EnableSiegeSurrender = mcm.EnableSiegeSurrender,
-                EnableSiegeStarvationSallyOut = mcm.EnableSiegeStarvationSallyOut,
-                NearbyEnemyLordStrengthPercentage = mcm.NearbyEnemyLordStrengthPercentage,
-                NearbyEnemyLordDetectionRange = mcm.NearbyEnemyLordDetectionRange,
-                SiegeNegotiationEasyThreshold = mcm.SiegeNegotiationEasyThreshold,
-                SiegeNegotiationNormalThreshold = mcm.SiegeNegotiationNormalThreshold,
-                SiegeNegotiationHardThreshold = mcm.SiegeNegotiationHardThreshold,
-                SiegeNegotiationRngPreset = mcm.SiegeNegotiationRngPreset.SelectedIndex,
-                EnableLordSurrender = mcm.EnableLordSurrender,
-                LordDialogPriority = mcm.LordDialogPriority,
-                EnablePatrolSurrender = mcm.EnablePatrolSurrender,
-                PatrolDialogPriority = mcm.PatrolDialogPriority,
-                LordCalculatingMultiplier = mcm.LordCalculatingMultiplier,
-                LordValorMultiplier = mcm.LordValorMultiplier,
-                LordMercyMultiplier = mcm.LordMercyMultiplier,
-                LordHonorMultiplier = mcm.LordHonorMultiplier
-            };
-        }
-#else
-        private static JgumJsonModel SettingsOrDefault()
-        {
-            return _settings;
-        }
+        private static JgumJsonModel SettingsOrDefault() => _settings;
 
         private static string GetConfigPath()
         {
-            // Prefer module-local config for portability, then fallback to user documents.
             var gameRoot = BasePath.Name;
             if (!string.IsNullOrWhiteSpace(gameRoot))
             {
@@ -147,7 +124,7 @@ namespace JGUM.Config
                 }
                 catch
                 {
-                    // Fallback below.
+                    // Fall back to documents path.
                 }
             }
 
@@ -170,9 +147,8 @@ namespace JGUM.Config
         [CommandLineFunctionality.CommandLineArgumentFunction("reload_config", "jgum")]
         public static string ReloadConfigCommand(List<string> args)
         {
-            var ok = Reload();
+            bool ok = Reload();
             return ok ? "JGUM config reloaded." : "JGUM config reload failed, defaults applied.";
         }
-#endif
     }
 }

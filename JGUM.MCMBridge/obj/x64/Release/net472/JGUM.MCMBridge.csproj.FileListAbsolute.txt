@@ -1,0 +1,11 @@
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM.MCMBridge\bin\x64\Release\net472\JGUM.MCMBridge.dll
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM.MCMBridge\bin\x64\Release\net472\JGUM.MCMBridge.pdb
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM.MCMBridge\bin\x64\Release\net472\JGUM.dll
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM.MCMBridge\bin\x64\Release\net472\JGUM.pdb
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM.MCMBridge\obj\x64\Release\net472\JGUM.MCMBridge.csproj.AssemblyReference.cache
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM.MCMBridge\obj\x64\Release\net472\JGUM.MCMBridge.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM.MCMBridge\obj\x64\Release\net472\JGUM.MCMBridge.csproj.CoreCompileInputs.cache
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM.MCMBridge\obj\x64\Release\net472\JGUM.MCMBridge.sourcelink.json
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM.MCMBridge\obj\x64\Release\net472\JGUM.MCM.7E59457F.Up2Date
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM.MCMBridge\obj\x64\Release\net472\JGUM.MCMBridge.dll
+C:\Users\meteh\RiderProjects\JustGiveUpMan\JGUM.MCMBridge\obj\x64\Release\net472\JGUM.MCMBridge.pdb

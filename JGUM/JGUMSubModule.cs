@@ -1,6 +1,11 @@
-﻿using JGUM.Calculators;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using JGUM.Calculators;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
+using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using JGUM.Config;
 using SiegeNegotiation = JGUM.Behaviors.SiegeNegotiationBehavior;
@@ -12,13 +17,16 @@ namespace JGUM
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
+
+            // Activate optional bridge as early as possible so MCM can discover its settings page.
+            TryActivateOptionalMcmBridge();
         }
+
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
             base.OnBeforeInitialModuleScreenSetAsRoot();
 
-
-            // Initialize config backend (MCM or JSON) once on module root screen.
+            // Initialize core JSON settings first.
             JgumSettingsManager.Initialize();
         }
 
@@ -26,22 +34,51 @@ namespace JGUM
         {
             base.OnGameStart(game, gameStarterObject);
 
-
             if (game.GameType is Campaign)
             {
                 CampaignGameStarter campaignStarter = (CampaignGameStarter)gameStarterObject;
-                
-                // Add siege surrender behavior for settlements under siege.
+
                 campaignStarter.AddBehavior(new Behaviors.SiegeSurrenderBehavior());
-                
-                // Add lord encounter surrender behavior to intercept field lord conversations.
                 campaignStarter.AddBehavior(new Behaviors.LordEncounterSurrenderBehavior());
-
-                // Add patrol encounter surrender behavior for non-lord hostile patrol encounters.
                 campaignStarter.AddBehavior(new Behaviors.PatrolEncounterSurrenderBehavior());
-
-                // Add proactive siege negotiation behavior (menu button + delayed response + persuasion flow).
                 campaignStarter.AddBehavior(new SiegeNegotiation.SiegeNegotiationBehavior());
+            }
+        }
+
+        private static void TryActivateOptionalMcmBridge()
+        {
+            try
+            {
+                // Require MCM base assembly at runtime. If unavailable, do nothing.
+                Assembly.Load("MCMv5");
+
+                string? gameRoot = BasePath.Name;
+                if (string.IsNullOrWhiteSpace(gameRoot))
+                    return;
+
+                string bridgePath = Path.Combine(
+                    gameRoot,
+                    "Modules",
+                    "JGUM",
+                    "bin",
+                    "Win64_Shipping_Client",
+                    "JGUM.MCMBridge.dll");
+
+                if (!File.Exists(bridgePath))
+                    return;
+
+                Assembly bridgeAssembly = AppDomain.CurrentDomain
+                                              .GetAssemblies()
+                                              .FirstOrDefault(a => string.Equals(a.GetName().Name, "JGUM.MCMBridge", StringComparison.OrdinalIgnoreCase))
+                                          ?? Assembly.LoadFrom(bridgePath);
+
+                Type? bootstrapType = bridgeAssembly.GetType("JGUM.MCMBridge.BridgeBootstrap");
+                MethodInfo? tryRegister = bootstrapType?.GetMethod("TryRegister", BindingFlags.Public | BindingFlags.Static);
+                tryRegister?.Invoke(null, null);
+            }
+            catch
+            {
+                // Optional bridge should never crash core startup.
             }
         }
     }

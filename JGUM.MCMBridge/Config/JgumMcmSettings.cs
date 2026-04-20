@@ -1,11 +1,10 @@
-﻿#if USE_MCM
-using JGUM.Calculators;
-using MCM.Common;
+﻿using JGUM.Calculators;
 using MCM.Abstractions.Attributes;
 using MCM.Abstractions.Attributes.v2;
 using MCM.Abstractions.Base.Global;
+using MCM.Common;
 
-namespace JGUM.Config
+namespace JGUM.MCMBridge.Config
 {
     public class JgumMcmSettings : AttributeGlobalSettings<JgumMcmSettings>
     {
@@ -18,7 +17,6 @@ namespace JGUM.Config
 
         public override string Id => "JGUMSettings";
         public override string DisplayName => StringCalculator.GetString("JGUM.Settings.DisplayName", "Just Give Up Man!");
-
         public override string FolderName => "JGUM";
         public override string FormatType => "json";
 
@@ -109,4 +107,4 @@ namespace JGUM.Config
         public int PatrolDialogPriority { get; set; } = 10000;
     }
 }
-#endif
+

@@ -1,7 +1,7 @@
 ﻿<Module>
   <Name value="Just Give Up Man!" />
   <Id value="JGUM" />
-  <Version value="b0.7.16.1" />
+  <Version value="b0.7.18.1" />
   <SingleplayerModule value="true" />
   <MultiplayerModule value="false" />
   <DependedModules>
@@ -10,6 +10,10 @@
     <DependedModule Id="Sandbox" />
     <DependedModule Id="CustomBattle" />
     <DependedModule Id="StoryMode" />
+    <DependedModule Id="Bannerlord.Harmony" Optional="true" />
+    <DependedModule Id="Bannerlord.ButterLib" Optional="true" />
+    <DependedModule Id="Bannerlord.UIExtenderEx" Optional="true" />
+    <DependedModule Id="Bannerlord.MBOptionScreen" Optional="true" />
   </DependedModules>
   <SubModules>
     <SubModule>
