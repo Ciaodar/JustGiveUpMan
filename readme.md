@@ -5,55 +5,48 @@
 - hostile lord encounters,
 - patrol encounters.
 
-The goal is to reduce repetitive battles when one side is clearly overwhelmed, while keeping player choice (accept or reject surrender) and trait consequences.
+The goal is to reduce repetitive battles when one side is clearly overwhelmed, while keeping player choice (accept/reject surrender) and trait consequences.
 
-## Module Variants
+## Module Model
 
-This repository builds and deploys two variants from the same codebase:
+This repository uses a **single module folder** model:
 
-1. `JGUM` (Standalone, default)
-   - No MCM dependency
-   - Reads settings from JSON (`JgumSettingsManager`)
+- Module folder: `Modules/JGUM`
+- Core assembly: `JGUM.dll` (required)
+- Optional bridge assembly: `JGUM.MCMBridge.dll` (optional MCM integration)
 
-2. `JGUM_MCM` (optional)
-   - Requires MCM dependency chain
-   - Reads settings from MCM UI
-
-Variant metadata templates:
-- `JGUM/SubModule.Standalone.xml`
-- `JGUM/SubModule.MCM.xml`
+At runtime:
+- If MCM dependency chain is present, core activates bridge and uses MCM settings.
+- If MCM is not present (or bridge is missing), core continues with JSON settings.
 
 ## Features
 
-- Dynamic settlement surrender checks during siege starvation flow
-- Lord encounter surrender dialog interception (multi-party aware)
+- Dynamic settlement surrender checks during siege/starvation flow
+- Proactive siege negotiation + persuasion flow
+- Lord encounter surrender interception (multi-party aware)
 - Patrol encounter surrender behavior (`PatrolEncounterSurrenderBehavior`)
-- Player accept/reject consequences with Mercy trait impact
 - EN/TR localization via `ModuleData/Languages/*/jgum_strings.xml`
 
 ## Installation
 
-1. Place module folder(s) into Bannerlord `Modules` directory.
-2. Enable either:
-   - `JGUM` (Standalone), or
-   - `JGUM_MCM` (MCM variant).
-3. Keep the chosen module after native modules in load order.
+1. Place `JGUM` folder into Bannerlord `Modules` directory.
+2. Enable `JGUM` in launcher.
+3. Keep `JGUM` after native modules in load order.
+4. Optional MCM UI: install/enable framework chain; bridge activates automatically.
 
 Typical modules path:
 `C:\Program Files (x86)\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules`
 
 ## Requirements
 
-### Standalone (`JGUM`)
-- Bannerlord base game modules only (Native/Sandbox stack)
+### Core (`JGUM`)
+- Bannerlord base game modules (Native/Sandbox stack)
 
-### MCM (`JGUM_MCM`)
-- Bannerlord base game modules
-- MCM v5 adapter chain referenced in project:
-  - `Harmony`
-  - `Butterlib`
-  - `UIExtenderEx`
-  - `MCMv5`
+### Optional MCM UI (bridge mode)
+- `Harmony`
+- `ButterLib`
+- `UIExtenderEx`
+- `MCMv5` (`Bannerlord.MBOptionScreen`)
 
 ## Build From Source
 
@@ -63,30 +56,46 @@ Project target:
 Solution:
 - `JustGiveUpMan.sln`
 
-Main project:
-- `JGUM/JGUM.csproj`
+Projects:
+- `JGUM/JGUM.csproj` (core)
+- `JGUM.MCMBridge/JGUM.MCMBridge.csproj` (optional bridge DLL)
 
-Build profiles include:
-- `Debug`, `Release`, `Debug_MCM`, `Release_MCM`
-
-Dual-variant build is enabled in `JGUM.csproj`, so building one profile also builds its counterpart.
+Build all:
 
 ```powershell
 Set-Location "C:\Users\meteh\RiderProjects\JustGiveUpMan"
-dotnet build .\JGUM\JGUM.csproj -c Release -p:Platform=x64
+dotnet build .\JustGiveUpMan.sln -c Release
 ```
 
-Post-build deploy copies output to:
-- `Modules\JGUM` (Standalone)
-- `Modules\JGUM_MCM` (MCM)
+Build core only:
+
+```powershell
+Set-Location "C:\Users\meteh\RiderProjects\JustGiveUpMan"
+dotnet build .\JGUM\JGUM.csproj -c Release
+```
+
+Build bridge only:
+
+```powershell
+Set-Location "C:\Users\meteh\RiderProjects\JustGiveUpMan"
+dotnet build .\JGUM.MCMBridge\JGUM.MCMBridge.csproj -c Release
+```
+
+Post-build deploy behavior:
+- `JGUM.csproj` deploys module files to `Modules/JGUM`
+- `JGUM.MCMBridge.csproj` copies `JGUM.MCMBridge.dll` into `Modules/JGUM/bin/Win64_Shipping_Client`
 
 ## Configuration
 
-Settings backend is managed by:
+Settings backend manager:
 - `JGUM/Config/JgumSettingsManager.cs`
 
-- Standalone: JSON-backed settings (`config.json`)
-- MCM: `USE_MCM` compile symbol path
+Backend precedence:
+1. Bridge-provided settings provider (if bridge active)
+2. JSON fallback (`config.json`)
+
+JSON hot-reload command:
+- `jgum.reload_config`
 
 ## Localization
 
@@ -94,7 +103,7 @@ Localization files:
 - `JGUM/ModuleData/Languages/EN/jgum_strings.xml`
 - `JGUM/ModuleData/Languages/TR/jgum_strings.xml`
 
-String access pattern in code:
+String access pattern:
 - `StringCalculator.GetString(baseId, fallback)`
 
 When adding new localized text:
@@ -105,13 +114,13 @@ When adding new localized text:
 ## Notes
 
 - No automated tests are included in this repository.
-- In-game validation is required for siege/lord/patrol dialogue paths.
+- In-game validation is required for siege/lord/patrol/negotiation dialogue paths.
 
 ## Contributing / Issues
 
 If you find bugs or regressions, open an issue with:
 - Bannerlord version
-- Active variant (`JGUM` or `JGUM_MCM`)
+- Whether MCM framework chain is installed/enabled
 - Repro steps
 - Crash log / stack trace (if available)
 
