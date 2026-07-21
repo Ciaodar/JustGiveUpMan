@@ -32,6 +32,13 @@ namespace JGUM.Data
 
         public override ChatNotificationType NotificationType => ChatNotificationType.Default;
 
+        // Universal Compatibility: Bannerlord 1.4.7+
+        public bool IsVisibleInEncyclopediaPageOf(MBObjectBase obj)
+        {
+            return obj == Winner || obj == Loser;
+        }
+
+        // Universal Compatibility: Bannerlord 1.4.6 and older
         public bool IsVisibleInEncyclopediaPageOf<T>(T obj) where T : MBObjectBase
         {
             return obj == Winner || obj == Loser;
