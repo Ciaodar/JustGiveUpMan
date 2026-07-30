@@ -19,31 +19,31 @@
 
   <ItemGroup>
     <Reference Include="TaleWorlds.CampaignSystem">
-      <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.CampaignSystem.dll</HintPath>
+      <HintPath>C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.CampaignSystem.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.Core">
-      <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.Core.dll</HintPath>
+      <HintPath>C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.Library">
-      <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.Library.dll</HintPath>
+      <HintPath>C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.Library.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.Localization">
-      <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.Localization.dll</HintPath>
+      <HintPath>C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.Localization.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.MountAndBlade">
-      <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.dll</HintPath>
+      <HintPath>C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.MountAndBlade.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.ObjectSystem">
-      <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.ObjectSystem.dll</HintPath>
+      <HintPath>C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.ObjectSystem.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.SaveSystem">
-      <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.SaveSystem.dll</HintPath>
+      <HintPath>C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.SaveSystem.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">

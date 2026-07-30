@@ -32,7 +32,7 @@ namespace JGUM.Data
 
         public override ChatNotificationType NotificationType => ChatNotificationType.Default;
 
-        public bool IsVisibleInEncyclopediaPageOf(MBObjectBase obj)
+        public bool IsVisibleInEncyclopediaPageOf<T>(T obj) where T : MBObjectBase
         {
             return obj == Winner || obj == Loser;
         }

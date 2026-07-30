@@ -18,11 +18,11 @@
 
   <ItemGroup>
     <Reference Include="TaleWorlds.Core">
-      <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.Core.dll</HintPath>
+      <HintPath>C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.MountAndBlade">
-      <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.dll</HintPath>
+      <HintPath>C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.MountAndBlade.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="MCMv5">
