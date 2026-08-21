@@ -182,6 +182,7 @@ namespace JGUM.Behaviors
                     var besiegerLeader = settlement.SiegeEvent?.BesiegerCamp.LeaderParty?.LeaderHero;
                     if (besiegerLeader != null)
                     {
+                        JGUM.Actions.WarScoreHelper.RecordSiegeSurrenderWarScore(settlement, besiegerLeader);
                         ChangeOwnerOfSettlementAction.ApplyBySiege(besiegerLeader, besiegerLeader, settlement);
                         
                         JgumInteropEvents.RaiseSurrenderResolved(new JgumSurrenderRecord
@@ -341,6 +342,7 @@ namespace JGUM.Behaviors
             if (besiegerLeader == null) return;
 
             OnConversationRelationshipChanges(2);
+            JGUM.Actions.WarScoreHelper.RecordSiegeSurrenderWarScore(settlement, besiegerLeader);
             ChangeOwnerOfSettlementAction.ApplyBySiege(besiegerLeader, besiegerLeader, settlement);
 
             var currentMercy = Hero.MainHero.GetTraitLevel(DefaultTraits.Mercy);

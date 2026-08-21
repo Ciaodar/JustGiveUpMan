@@ -162,6 +162,7 @@ namespace JGUM.Behaviors
             GiveGoldAction.ApplyBetweenCharacters(besiegerLeader, Hero.MainHero, offerPrice, true);
 
             // Transfer settlement ownership
+            JGUM.Actions.WarScoreHelper.RecordSiegeSurrenderWarScore(settlement, besiegerLeader);
             ChangeOwnerOfSettlementAction.ApplyBySiege(besiegerLeader, besiegerLeader, settlement);
 
             // Relationship bonus for peaceful resolution
