@@ -185,6 +185,13 @@ namespace JGUM.Behaviors
                 PlayerEncounter.EnemySurrender = true;
                 PlayerEncounter.SetPlayerVictorious();
 
+                var encounteredParty = PatrolEncounterSurrenderContext.EnemyParty;
+                if (encounteredParty != null && Hero.MainHero.MapFaction != null)
+                {
+                    int totalCasualties = encounteredParty.MemberRoster.TotalManCount;
+                    JGUM.Actions.WarScoreHelper.RecordFieldSurrenderCasualties(encounteredParty, Hero.MainHero.MapFaction, totalCasualties);
+                }
+
                 var enemyHero = PatrolEncounterSurrenderContext.EnemyParty?.LeaderHero;
                 var mainParty = Hero.MainHero.PartyBelongedTo?.Party;
                 if (enemyHero != null && mainParty != null)

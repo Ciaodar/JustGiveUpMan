@@ -1,4 +1,4 @@
-﻿using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.Encounters;
@@ -27,6 +27,7 @@ namespace JGUM.Actions
             if (currentMercy < 2)
                 Hero.MainHero.SetTraitLevel(DefaultTraits.Mercy, currentMercy + 1);
 
+            JGUM.Actions.WarScoreHelper.RecordSiegeSurrenderWarScore(settlement, besiegerLeader);
             ChangeOwnerOfSettlementAction.ApplyBySiege(besiegerLeader, besiegerLeader, settlement);
 
             if (PlayerEncounter.Current != null)

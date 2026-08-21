@@ -292,6 +292,14 @@ namespace JGUM.Behaviors
                 // main loop (GameLoop) will see these flags and open the menus automatically.
                 PlayerEncounter.EnemySurrender = true;
                 PlayerEncounter.SetPlayerVictorious();
+                
+                var encounteredParty = PlayerEncounter.EncounteredMobileParty;
+                if (encounteredParty != null && Hero.MainHero.MapFaction != null)
+                {
+                    int totalCasualties = encounteredParty.MemberRoster.TotalManCount;
+                    JGUM.Actions.WarScoreHelper.RecordFieldSurrenderCasualties(encounteredParty.Party, Hero.MainHero.MapFaction, totalCasualties);
+                }
+
                 var mainParty = Hero.MainHero.PartyBelongedTo?.Party;
                 if (mainParty != null)
                 {

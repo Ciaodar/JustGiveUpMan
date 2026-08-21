@@ -189,6 +189,7 @@ namespace JGUM.AIBehaviors
                 // Finalize siege
                 if (winnerHero != null)
                 {
+                    JGUM.Actions.WarScoreHelper.RecordSiegeSurrenderWarScore(settlement, winnerHero);
                     ChangeOwnerOfSettlementAction.ApplyBySiege(winnerHero, winnerHero, settlement);
                 }
                 

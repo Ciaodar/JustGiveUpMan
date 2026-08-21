@@ -172,6 +172,7 @@ namespace JGUM.Behaviors
             }
 
             // Transfer settlement ownership without pillaging
+            JGUM.Actions.WarScoreHelper.RecordSiegeSurrenderWarScore(settlement, besiegerLeader);
             ChangeOwnerOfSettlementAction.ApplyByDefault(besiegerLeader, settlement);
 
             // Finalize siege
