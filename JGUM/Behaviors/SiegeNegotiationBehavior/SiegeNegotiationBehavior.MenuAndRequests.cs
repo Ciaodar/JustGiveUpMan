@@ -186,12 +186,14 @@ namespace JGUM.Behaviors.SiegeNegotiationBehavior
 
             var playerData = new ConversationCharacterData(CharacterObject.PlayerCharacter);
             var defenderData = new ConversationCharacterData(
-                defenderCharacter,
-                spawnAfterFight: true,
+                character: defenderCharacter,
+                party: null,
+                noHorse: true,
                 noWeapon: true,
-                noBodyguards: true,
-                isCivilianEquipmentRequiredForLeader: true,
-                isCivilianEquipmentRequiredForBodyGuardCharacters: true);
+                spawnAfterFight: false,
+                isCivilianEquipmentRequiredForLeader: defenderCharacter.IsHero,
+                isCivilianEquipmentRequiredForBodyGuardCharacters: false,
+                noBodyguards: true);
 
             CampaignMapConversation.OpenConversation(playerData, defenderData);
         }
