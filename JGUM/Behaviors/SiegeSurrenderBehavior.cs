@@ -250,9 +250,15 @@ namespace JGUM.Behaviors
                 SurrenderDialogContext.SurrenderingSettlement = settlement;
 
                 var playerData = new ConversationCharacterData(CharacterObject.PlayerCharacter);
-                var defenderData = new ConversationCharacterData(defenderCharacter, spawnAfterFight: true,
-                    noWeapon: true, noBodyguards: true, isCivilianEquipmentRequiredForLeader: true,
-                    isCivilianEquipmentRequiredForBodyGuardCharacters: true);
+                var defenderData = new ConversationCharacterData(
+                    character: defenderCharacter,
+                    party: null,
+                    noHorse: true,
+                    noWeapon: true,
+                    spawnAfterFight: false,
+                    isCivilianEquipmentRequiredForLeader: defenderCharacter.IsHero,
+                    isCivilianEquipmentRequiredForBodyGuardCharacters: false,
+                    noBodyguards: true);
 
                 try
                 {
