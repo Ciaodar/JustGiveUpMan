@@ -206,6 +206,7 @@
     <string id="JGUM.Settings.FiefPurchaseOfferDailyChance.Name" text="Daily Offer Chance" />
     <string id="JGUM.Settings.FiefPurchaseOfferDailyChance.Hint" text="Daily probability of receiving a purchase offer while your settlement is under siege." />
     <string id="JGUM.Settings.FiefPurchaseOfferCooldownDays.Name" text="Offer Cooldown (Days)" />
+    <string id="JGUM.Settings.FiefPurchaseOfferCooldownDays.Hint" text="Number of days before a new offer can be made after rejection." />
     <!-- Voluntary Surrender -->
     <string id="jgum_voluntary_surrender_menu_option" text="Offer to surrender the settlement" />
     <string id="jgum_voluntary_surrender_menu_tooltip_cooldown" text="You have recently sent a surrender offer. The enemy will not entertain another messenger so soon." />
@@ -232,6 +233,10 @@
     <string id="JGUM.Settings.AiVsAiSiegeGuaranteedSurrenderThreshold.Hint" text="Power advantage required for guaranteed AI siege surrender without RNG." />
     <string id="JGUM.Settings.AiVsAiSiegeDailySurrenderLimit.Name" text="Siege Daily Surrender Limit (AI)" />
     <string id="JGUM.Settings.AiVsAiSiegeDailySurrenderLimit.Hint" text="Maximum number of AI siege surrenders per day to prevent snowballing." />
+    <string id="JGUM.Settings.EnableAiAreaControlRadius.Name" text="Enable AI Area Control Radius" />
+    <string id="JGUM.Settings.EnableAiAreaControlRadius.Hint" text="If enabled, friendly parties near an AI vs AI encounter will be calculated into power ratio inversely proportional to their distance." />
+    <string id="JGUM.Settings.AiAreaControlRadius.Name" text="AI Area Control Radius" />
+    <string id="JGUM.Settings.AiAreaControlRadius.Hint" text="The maximum distance to scan for nearby friendly parties to include in power calculations." />
     <string id="jgum_ai_surrender_log" text="{LOSER_NAME} surrendered to the overwhelming forces of {WINNER_NAME} without a fight." />
 
     <!-- Mod Data Management -->
