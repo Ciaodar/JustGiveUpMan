@@ -177,6 +177,14 @@ namespace JGUM.MCMBridge.Config
         [SettingPropertyGroup("{=JGUM.Settings.Group.AiVsAi}AI vs AI")]
         public int AiVsAiSiegeDailySurrenderLimit { get; set; } = 2;
 
+        [SettingPropertyBool("{=JGUM.Settings.EnableAiAreaControlRadius.Name}Enable AI Area Control Radius", Order = 8, RequireRestart = false, HintText = "{=JGUM.Settings.EnableAiAreaControlRadius.Hint}If enabled, nearby friendly parties outside the battle will contribute their strength to the AI surrender power calculation.")]
+        [SettingPropertyGroup("{=JGUM.Settings.Group.AiVsAi}AI vs AI")]
+        public bool EnableAiAreaControlRadius { get; set; } = true;
+
+        [SettingPropertyFloatingInteger("{=JGUM.Settings.AiAreaControlRadius.Name}AI Area Control Radius", 1f, 50f, Order = 9, RequireRestart = false, HintText = "{=JGUM.Settings.AiAreaControlRadius.Hint}The maximum distance to scan for nearby friendly parties to include in power calculations.")]
+        [SettingPropertyGroup("{=JGUM.Settings.Group.AiVsAi}AI vs AI")]
+        public float AiAreaControlRadius { get; set; } = 15f;
+
         // ──────────────────────────────────────────────
         // Advanced settings (only visible in MCM in Debug builds)
         // Properties always exist for BridgeBootstrap compatibility.

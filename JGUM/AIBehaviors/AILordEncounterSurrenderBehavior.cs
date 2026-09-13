@@ -45,6 +45,13 @@ namespace JGUM.AIBehaviors
             float attackerStrength = mapEvent.StrengthOfSide[(int)BattleSideEnum.Attacker];
             float defenderStrength = mapEvent.StrengthOfSide[(int)BattleSideEnum.Defender];
 
+            if (JgumSettingsManager.EnableAiAreaControlRadius)
+            {
+                float radius = JgumSettingsManager.AiAreaControlRadius;
+                attackerStrength += CalculateNearbyPartyStrength(mapEvent, attackerParty?.MapFaction, radius);
+                defenderStrength += CalculateNearbyPartyStrength(mapEvent, defenderParty?.MapFaction, radius);
+            }
+
             if (attackerStrength <= 0f && defenderStrength <= 0f) return;
 
             BattleSideEnum weakerSide;
@@ -186,6 +193,44 @@ namespace JGUM.AIBehaviors
                 // Force the map event to end with the weaker side surrendering
                 mapEvent.DoSurrender(weakerSide);
             }
+        }
+
+        private float CalculateNearbyPartyStrength(MapEvent mapEvent, IFaction? faction, float radius)
+        {
+            if (faction == null) return 0f;
+            float extraStrength = 0f;
+
+            var involvedParties = mapEvent.InvolvedParties.ToList();
+
+            foreach (MobileParty party in MobileParty.All)
+            {
+                if (party.MapFaction != faction) continue;
+                if (!party.IsLordParty) continue;
+                if (party.CurrentSettlement != null) continue;
+                if (involvedParties.Contains(party.Party)) continue;
+
+                float dist = party.Position.Distance(mapEvent.Position);
+                if (dist <= radius)
+                {
+                    float nativeRadius = 3f;
+                    float ratio = 1f;
+
+                    if (dist > nativeRadius)
+                    {
+                        float dynamicRange = radius - nativeRadius;
+                        if (dynamicRange > 0f)
+                            ratio = 1f - ((dist - nativeRadius) / dynamicRange);
+                        else
+                            ratio = 0f;
+                    }
+                    
+                    if (ratio < 0f) ratio = 0f;
+                    
+                    extraStrength += party.Party.CalculateCurrentStrength() * ratio;
+                }
+            }
+
+            return extraStrength;
         }
     }
 }

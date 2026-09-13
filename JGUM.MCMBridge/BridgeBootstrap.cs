@@ -69,6 +69,8 @@ namespace JGUM.MCMBridge
                 AiVsAiSiegeBaseSurrenderThreshold = mcm.AiVsAiSiegeBaseSurrenderThreshold,
                 AiVsAiSiegeGuaranteedSurrenderThreshold = mcm.AiVsAiSiegeGuaranteedSurrenderThreshold,
                 AiVsAiSiegeDailySurrenderLimit = mcm.AiVsAiSiegeDailySurrenderLimit,
+                EnableAiAreaControlRadius = mcm.EnableAiAreaControlRadius,
+                AiAreaControlRadius = mcm.AiAreaControlRadius,
                 EnableVoluntarySurrender = mcm.EnableVoluntarySurrender,
                 VoluntarySurrenderBaseChance = mcm.VoluntarySurrenderBaseChance,
                 VoluntarySurrenderHonorPenalty = mcm.VoluntarySurrenderHonorPenalty,
