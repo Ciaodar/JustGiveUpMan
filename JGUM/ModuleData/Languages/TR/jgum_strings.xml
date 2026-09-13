@@ -206,6 +206,7 @@
     <string id="JGUM.Settings.FiefPurchaseOfferDailyChance.Name" text="Günlük Teklif Şansı" />
     <string id="JGUM.Settings.FiefPurchaseOfferDailyChance.Hint" text="Yerleşiminiz kuşatma altındayken günlük satın alma teklifi alma olasılığı." />
     <string id="JGUM.Settings.FiefPurchaseOfferCooldownDays.Name" text="Teklif Bekleme Süresi (Gün)" />
+    <string id="JGUM.Settings.FiefPurchaseOfferCooldownDays.Hint" text="Reddedildikten sonra yeni bir teklif yapılabilmesi için geçmesi gereken gün sayısı." />
     <!-- Voluntary Surrender -->
     <string id="jgum_voluntary_surrender_menu_option" text="Yerleşimi teslim etmeyi teklif et" />
     <string id="jgum_voluntary_surrender_menu_tooltip_cooldown" text="Kısa süre önce bir teslimiyet teklifi gönderdiniz. Düşman bu kadar çabuk başka bir haberciyi kabul etmeyecektir." />
@@ -232,6 +233,10 @@
     <string id="JGUM.Settings.AiVsAiSiegeGuaranteedSurrenderThreshold.Hint" text="Yapay zeka garnizonlarının kuşatmalarda şans faktörü olmaksızın kesin olarak teslim olacağı güç üstünlüğü." />
     <string id="JGUM.Settings.AiVsAiSiegeDailySurrenderLimit.Name" text="Günlük Kuşatma Teslim Limiti (AI)" />
     <string id="JGUM.Settings.AiVsAiSiegeDailySurrenderLimit.Hint" text="Harita dengesinin hızla bozulmaması için yapay zekanın günde en fazla kaç kez kuşatma teslimiyeti yapabileceğini belirler." />
+    <string id="JGUM.Settings.EnableAiAreaControlRadius.Name" text="Yapay Zeka Alan Kontrol Yarıçapını Etkinleştir" />
+    <string id="JGUM.Settings.EnableAiAreaControlRadius.Hint" text="Etkinleştirilirse, YZ vs YZ savaşlarının yakınındaki dost birlikler, savaşa olan uzaklıklarıyla ters orantılı olarak güç hesaplamasına dahil edilir." />
+    <string id="JGUM.Settings.AiAreaControlRadius.Name" text="Yapay Zeka Alan Kontrol Yarıçapı" />
+    <string id="JGUM.Settings.AiAreaControlRadius.Hint" text="Güç hesaplamalarına dahil edilecek yakındaki dost birlikleri aramak için maksimum mesafe." />
     <string id="jgum_ai_surrender_log" text="{LOSER_NAME}, ezici gücü karşısında {WINNER_NAME} lorduna savaşmadan teslim oldu." />
 
     <!-- Mod Data Management -->
