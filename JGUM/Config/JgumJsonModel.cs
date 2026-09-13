@@ -59,7 +59,7 @@ namespace JGUM.Config
         public float AiVsAiSiegeGuaranteedSurrenderThreshold { get; set; } = 8.0f;
         public int AiVsAiSiegeDailySurrenderLimit { get; set; } = 2;
         public bool EnableAiAreaControlRadius { get; set; } = true;
-        public float AiAreaControlRadius { get; set; } = 15f;
+        public float AiAreaControlRadius { get; set; } = 7f;
 
         // Abandon Settlement (Voluntary Surrender)
         public bool EnableVoluntarySurrender { get; set; } = true;

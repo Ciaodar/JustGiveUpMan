@@ -46,6 +46,9 @@ namespace JGUM.AIBehaviors
 
             if (settlement?.SiegeEvent == null || !settlement.IsUnderSiege) return;
 
+            // Do not trigger surrender if an assault (MapEvent) is actively ongoing to prevent simulation crashes
+            if (settlement.Party?.MapEvent != null) return;
+
             // Check if player is involved (we only want AI vs AI)
             if (IsPlayerInvolvedInSiege(settlement)) return;
 

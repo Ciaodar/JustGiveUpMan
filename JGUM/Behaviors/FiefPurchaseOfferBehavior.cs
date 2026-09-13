@@ -49,6 +49,9 @@ namespace JGUM.Behaviors
                 return;
             }
 
+            if (settlement.Party?.MapEvent != null)
+                return;
+
             if (!_siegeStartBySettlement.ContainsKey(key))
             {
                 _siegeStartBySettlement[key] = CampaignTime.Now;

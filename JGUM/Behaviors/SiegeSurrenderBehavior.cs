@@ -165,6 +165,9 @@ namespace JGUM.Behaviors
             if (!settlement.IsUnderSiege || SurrenderDialogContext.IsInSurrenderConversation)
                 return;
 
+            if (settlement.Party?.MapEvent != null)
+                return;
+
             if (!JgumSettingsManager.EnableSiegeSurrender && !JgumSettingsManager.EnableSiegeStarvationSallyOut)
                 return;
 

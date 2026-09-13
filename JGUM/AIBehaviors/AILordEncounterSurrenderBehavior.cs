@@ -212,18 +212,7 @@ namespace JGUM.AIBehaviors
                 float dist = party.Position.Distance(mapEvent.Position);
                 if (dist <= radius)
                 {
-                    float nativeRadius = 3f;
-                    float ratio = 1f;
-
-                    if (dist > nativeRadius)
-                    {
-                        float dynamicRange = radius - nativeRadius;
-                        if (dynamicRange > 0f)
-                            ratio = 1f - ((dist - nativeRadius) / dynamicRange);
-                        else
-                            ratio = 0f;
-                    }
-                    
+                    float ratio = 1f - (dist / radius);
                     if (ratio < 0f) ratio = 0f;
                     
                     extraStrength += party.Party.CalculateCurrentStrength() * ratio;

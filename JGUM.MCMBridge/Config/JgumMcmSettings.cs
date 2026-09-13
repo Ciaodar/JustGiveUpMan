@@ -183,7 +183,7 @@ namespace JGUM.MCMBridge.Config
 
         [SettingPropertyFloatingInteger("{=JGUM.Settings.AiAreaControlRadius.Name}AI Area Control Radius", 1f, 50f, Order = 9, RequireRestart = false, HintText = "{=JGUM.Settings.AiAreaControlRadius.Hint}The maximum distance to scan for nearby friendly parties to include in power calculations.")]
         [SettingPropertyGroup("{=JGUM.Settings.Group.AiVsAi}AI vs AI")]
-        public float AiAreaControlRadius { get; set; } = 15f;
+        public float AiAreaControlRadius { get; set; } = 7f;
 
         // ──────────────────────────────────────────────
         // Advanced settings (only visible in MCM in Debug builds)
