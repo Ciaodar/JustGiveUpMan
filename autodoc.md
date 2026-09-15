@@ -65,7 +65,7 @@ Teslimiyet mekanizması, rastgele olasılıklardan uzak, fiziksel ve psikolojik 
 
 Savaş öncesi karşılaşmalarda düşman liderinin teslim olup olmayacağını hesaplar.
 
-#### Adım 1: Temel Güç Oranının Hesaplanması
+#### Adım 1: Temel Güç Oranının Hesapunması
 Güç oranı, oyuncu tarafının toplam askeri gücünün, düşman tarafının toplam askeri gücüne bölünmesiyle elde edilir:
 
 $$\text{Power Ratio} = \frac{\text{Oyuncu Gücü}}{\text{Düşman Gücü}}$$
@@ -198,9 +198,9 @@ Eğer oyuncu teklifi kabul ederse, altın oyuncunun envanterine geçer, kalenin 
 Oyuncu, kuşatılan kalesini daha fazla askeri kayıp vermeden düşmana gönüllü olarak teslim etmeyi teklif edebilir. 
 
 #### Koşullar ve Kısıtlamalar
-Gönüllü teslimiyet (yerleşimi terk etme) teklifinin yapılabilmesi için aşağıdaki koşulların her ikisinin de sağlanması gerekir:
+Gönüllü teslimiyet (yerleşimi terk etme) teklifinin yapılabilmesi için aşağıdaki koşulların her ikisinin de sağlanması gerekir (kod seviyesinde `IsPlayerDefender` fonksiyonu ile doğrulanır):
 1. Kuşatılan yerleşim doğrudan oyuncunun klanına ait olmalıdır (`settlement.OwnerClan == Hero.MainHero.Clan`).
-2. Oyuncunun ana birliği, o esnada yerleşimdeki aktif savunma tarafında yer almalıdır.
+2. Oyuncunun ana birliği, o esnada yerleşimdeki aktif savunma tarafında yer almalıdır (`settlement.SiegeEvent.GetSiegeEventSide(BattleSideEnum.Defender).HasInvolvedPartyForEventType(playerParty)`).
 
 #### Teklif Mekaniği ve Karakter Özellikleri Etkisi
 - Kuşatmacı liderin **Mercy (Merhamet)** özelliğine bağlı olarak teklif kabul edilir veya reddedilir:
