@@ -2,7 +2,7 @@
 <Module>
   <Name value="Just Give Up Man!" />
   <Id value="JGUM" />
-  <Version value="v2.4.1.44" />
+  <Version value="v2.4.2.45" />
   <DefaultModule value="false" />
   <ModuleCategory value="Singleplayer" />
   <ModuleType value="Community" />
@@ -41,4 +41,3 @@
   </SubModules>
   <Xmls />
 </Module>
-
