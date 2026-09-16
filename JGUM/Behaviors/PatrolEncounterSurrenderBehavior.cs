@@ -147,9 +147,7 @@ namespace JGUM.Behaviors
 
         private void RejectPatrolSurrender()
         {
-            var currentMercy = Hero.MainHero.GetTraitLevel(DefaultTraits.Mercy);
-            if (currentMercy > -2)
-                Hero.MainHero.SetTraitLevel(DefaultTraits.Mercy, currentMercy - 1);
+            TraitLevelingHelper.OnIncidentResolved(DefaultTraits.Mercy, -20);
 
             InformationManager.DisplayMessage(new InformationMessage(
                 StringCalculator.GetString("jgum_field_surrender_rejected", "The dogs will get their scraps after all!"),

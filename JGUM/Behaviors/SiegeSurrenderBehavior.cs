@@ -348,9 +348,7 @@ namespace JGUM.Behaviors
             JGUM.Actions.WarScoreHelper.RecordSiegeSurrenderWarScore(settlement, besiegerLeader);
             ChangeOwnerOfSettlementAction.ApplyBySiege(besiegerLeader, besiegerLeader, settlement);
 
-            var currentMercy = Hero.MainHero.GetTraitLevel(DefaultTraits.Mercy);
-            if (currentMercy < 2)
-                Hero.MainHero.SetTraitLevel(DefaultTraits.Mercy, currentMercy + 1);
+            TraitLevelingHelper.OnIncidentResolved(DefaultTraits.Mercy, 20);
             if (PlayerEncounter.Current != null)
                 PlayerEncounter.Finish();
             siegeEvent.FinalizeSiegeEvent();
@@ -380,9 +378,7 @@ namespace JGUM.Behaviors
         private void RejectSurrenderInternal(Settlement? settlement)
         {
             OnConversationRelationshipChanges(-2);
-            var currentMercy = Hero.MainHero.GetTraitLevel(DefaultTraits.Mercy);
-            if (currentMercy > -2)
-                Hero.MainHero.SetTraitLevel(DefaultTraits.Mercy, currentMercy - 1);
+            TraitLevelingHelper.OnIncidentResolved(DefaultTraits.Mercy, -20);
 
             var targetSettlement = settlement ?? SurrenderDialogContext.SurrenderingSettlement;
             if (JgumSettingsManager.EnableSiegeStarvationSallyOut && targetSettlement != null &&

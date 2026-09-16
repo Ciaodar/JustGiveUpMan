@@ -23,9 +23,7 @@ namespace JGUM.Actions
             if (conversationHero != null)
                 Hero.MainHero.SetPersonalRelation(conversationHero, (int)conversationHero.GetRelationWithPlayer() + 2);
 
-            int currentMercy = Hero.MainHero.GetTraitLevel(DefaultTraits.Mercy);
-            if (currentMercy < 2)
-                Hero.MainHero.SetTraitLevel(DefaultTraits.Mercy, currentMercy + 1);
+            TraitLevelingHelper.OnIncidentResolved(DefaultTraits.Mercy, 20);
 
             JGUM.Actions.WarScoreHelper.RecordSiegeSurrenderWarScore(settlement, besiegerLeader);
             ChangeOwnerOfSettlementAction.ApplyBySiege(besiegerLeader, besiegerLeader, settlement);

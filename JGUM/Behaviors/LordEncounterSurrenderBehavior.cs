@@ -237,9 +237,7 @@ namespace JGUM.Behaviors
         private void RejectLordSurrender()
         {
             // Update player cruelty trait for rejecting surrender
-            var currentMercy = Hero.MainHero.GetTraitLevel(DefaultTraits.Mercy);
-            if (currentMercy > -2)
-                Hero.MainHero.SetTraitLevel(DefaultTraits.Mercy, currentMercy - 1);
+            TraitLevelingHelper.OnIncidentResolved(DefaultTraits.Mercy, -20);
 
             // Show message about continuing fight
             var message = new InformationMessage(
