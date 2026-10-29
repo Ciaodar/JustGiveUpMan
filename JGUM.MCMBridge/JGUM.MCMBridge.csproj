@@ -5,7 +5,8 @@
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
     <PlatformTarget>x64</PlatformTarget>
-    <GameFolder>C:\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord</GameFolder>
+    <GameFolder Condition="Exists('D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord')">D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord</GameFolder>
+    <GameFolder Condition="'$(GameFolder)' == ''">C:\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord</GameFolder>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Configurations>Debug;Update;Hotfix</Configurations>
     <SubModuleTemplatePath>$(ProjectDir)..\JGUM\SubModule.xml</SubModuleTemplatePath>
