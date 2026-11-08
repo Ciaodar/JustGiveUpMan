@@ -8,5 +8,7 @@ AGENTS.md
 /JGUM.MCMBridge/bin
 /JGUM.MCMBridge/bin
 /JGUM.MCMBridge/obj
-/JGUM/bin
 /JGUM/obj
+/JGUM/bin
+/artifacts/
+/.agents/

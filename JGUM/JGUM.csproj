@@ -6,7 +6,9 @@
     <Nullable>enable</Nullable>
     <PlatformTarget>x64</PlatformTarget>
     <GameFolder Condition="Exists('D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord')">D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord</GameFolder>
-    <GameFolder Condition="'$(GameFolder)' == ''">C:\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord</GameFolder>
+    <GameFolder Condition="'$(GameFolder)' == '' And Exists('C:\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord')">C:\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord</GameFolder>
+    <UseLocalGameDlls>false</UseLocalGameDlls>
+    <UseLocalGameDlls Condition="'$(GITHUB_ACTIONS)' != 'true' And '$(GameFolder)' != '' And Exists('$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.Core.dll')">true</UseLocalGameDlls>
     <ModuleName>JGUM</ModuleName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Configurations>Debug;Update;Hotfix</Configurations>
@@ -16,9 +18,11 @@
   <PropertyGroup>
     <OutputModuleName>$(ModuleName)</OutputModuleName>
     <SubModuleTemplatePath>$(ProjectDir)SubModule.xml</SubModuleTemplatePath>
+    <ModuleFolder Condition="'$(UseLocalGameDlls)' == 'true'">$(GameFolder)\Modules\$(OutputModuleName)</ModuleFolder>
+    <ModuleFolder Condition="'$(UseLocalGameDlls)' != 'true'">$(ProjectDir)..\artifacts\$(OutputModuleName)</ModuleFolder>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(UseLocalGameDlls)' == 'true'">
     <Reference Include="TaleWorlds.CampaignSystem">
       <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.CampaignSystem.dll</HintPath>
       <Private>False</Private>
@@ -53,6 +57,12 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup Condition="'$(UseLocalGameDlls)' != 'true'">
+    <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="1.4.8.119303" PrivateAssets="all" IncludeAssets="compile" />
+    <PackageReference Include="Bannerlord.ReferenceAssemblies.SandBox" Version="1.4.8.119303" PrivateAssets="all" IncludeAssets="compile" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" PrivateAssets="all" IncludeAssets="compile" />
+  </ItemGroup>
+
   <ItemGroup>
     <Folder Include="Testing\" />
   </ItemGroup>
@@ -61,15 +71,12 @@
     <Compile Remove="Behaviors\SiegeNegotiationBehavior.cs" />
   </ItemGroup>
 
-  <Target Name="UpdateVersion" BeforeTargets="PostBuildEvent">
-    <!-- Versiyon numarasını güncelle -->
+  <Target Name="UpdateVersion" BeforeTargets="PostBuildEvent" Condition="'$(SkipVersionBump)' != 'true'">
+    <!-- Versiyon numarasini guncelle -->
     <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(ProjectDir)Build\UpdateVersion.ps1&quot; -SubModulePath &quot;$(SubModuleTemplatePath)&quot; -Configuration &quot;$(Configuration)&quot;" />
   </Target>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <PropertyGroup>
-      <ModuleFolder>$(GameFolder)\Modules\$(OutputModuleName)</ModuleFolder>
-    </PropertyGroup>
     <ItemGroup>
       <ModuleBin Include="$(TargetDir)$(ProjectName).dll" />
       <ModuleData Include="$(ProjectDir)ModuleData\**\*.*" />
