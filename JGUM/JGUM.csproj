@@ -5,7 +5,10 @@
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
     <PlatformTarget>x64</PlatformTarget>
-    <GameFolder>C:\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord</GameFolder>
+    <GameFolder Condition="Exists('D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord')">D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord</GameFolder>
+    <GameFolder Condition="'$(GameFolder)' == '' And Exists('C:\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord')">C:\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord</GameFolder>
+    <UseLocalGameDlls>false</UseLocalGameDlls>
+    <UseLocalGameDlls Condition="'$(GITHUB_ACTIONS)' != 'true' And '$(GameFolder)' != '' And Exists('$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.Core.dll')">true</UseLocalGameDlls>
     <ModuleName>JGUM</ModuleName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Configurations>Debug;Update;Hotfix</Configurations>
@@ -15,41 +18,56 @@
   <PropertyGroup>
     <OutputModuleName>$(ModuleName)</OutputModuleName>
     <SubModuleTemplatePath>$(ProjectDir)SubModule.xml</SubModuleTemplatePath>
+    <ModuleFolder Condition="'$(UseLocalGameDlls)' == 'true'">$(GameFolder)\Modules\$(OutputModuleName)</ModuleFolder>
+    <ModuleFolder Condition="'$(UseLocalGameDlls)' != 'true'">$(ProjectDir)..\artifacts\$(OutputModuleName)</ModuleFolder>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(UseLocalGameDlls)' == 'true'">
     <Reference Include="TaleWorlds.CampaignSystem">
-      <HintPath>C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.CampaignSystem.dll</HintPath>
+      <HintPath Condition="Exists('C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.CampaignSystem.dll')">C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.CampaignSystem.dll</HintPath>
+      <HintPath Condition="!Exists('C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.CampaignSystem.dll')">$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.CampaignSystem.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.Core">
-      <HintPath>C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.Core.dll</HintPath>
+      <HintPath Condition="Exists('C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.Core.dll')">C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.Core.dll</HintPath>
+      <HintPath Condition="!Exists('C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.Core.dll')">$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.Library">
-      <HintPath>C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.Library.dll</HintPath>
+      <HintPath Condition="Exists('C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.Library.dll')">C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.Library.dll</HintPath>
+      <HintPath Condition="!Exists('C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.Library.dll')">$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.Library.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.Localization">
-      <HintPath>C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.Localization.dll</HintPath>
+      <HintPath Condition="Exists('C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.Localization.dll')">C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.Localization.dll</HintPath>
+      <HintPath Condition="!Exists('C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.Localization.dll')">$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.Localization.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.MountAndBlade">
-      <HintPath>C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.MountAndBlade.dll</HintPath>
+      <HintPath Condition="Exists('C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.MountAndBlade.dll')">C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.MountAndBlade.dll</HintPath>
+      <HintPath Condition="!Exists('C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.MountAndBlade.dll')">$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.ObjectSystem">
-      <HintPath>C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.ObjectSystem.dll</HintPath>
+      <HintPath Condition="Exists('C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.ObjectSystem.dll')">C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.ObjectSystem.dll</HintPath>
+      <HintPath Condition="!Exists('C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.ObjectSystem.dll')">$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.ObjectSystem.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.SaveSystem">
-      <HintPath>C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.SaveSystem.dll</HintPath>
+      <HintPath Condition="Exists('C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.SaveSystem.dll')">C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.SaveSystem.dll</HintPath>
+      <HintPath Condition="!Exists('C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.SaveSystem.dll')">$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.SaveSystem.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(UseLocalGameDlls)' != 'true'">
+    <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="1.4.6.115628" PrivateAssets="all" IncludeAssets="compile" />
+    <PackageReference Include="Bannerlord.ReferenceAssemblies.SandBox" Version="1.4.6.115628" PrivateAssets="all" IncludeAssets="compile" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" PrivateAssets="all" IncludeAssets="compile" />
   </ItemGroup>
 
   <ItemGroup>
@@ -60,15 +78,12 @@
     <Compile Remove="Behaviors\SiegeNegotiationBehavior.cs" />
   </ItemGroup>
 
-  <Target Name="UpdateVersion" BeforeTargets="PostBuildEvent">
-    <!-- Versiyon numarasını güncelle -->
+  <Target Name="UpdateVersion" BeforeTargets="PostBuildEvent" Condition="'$(SkipVersionBump)' != 'true'">
+    <!-- Versiyon numarasini guncelle -->
     <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(ProjectDir)Build\UpdateVersion.ps1&quot; -SubModulePath &quot;$(SubModuleTemplatePath)&quot; -Configuration &quot;$(Configuration)&quot;" />
   </Target>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <PropertyGroup>
-      <ModuleFolder>$(GameFolder)\Modules\$(OutputModuleName)</ModuleFolder>
-    </PropertyGroup>
     <ItemGroup>
       <ModuleBin Include="$(TargetDir)$(ProjectName).dll" />
       <ModuleData Include="$(ProjectDir)ModuleData\**\*.*" />

@@ -5,24 +5,31 @@
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
     <PlatformTarget>x64</PlatformTarget>
-    <GameFolder>C:\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord</GameFolder>
+    <GameFolder Condition="Exists('D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord')">D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord</GameFolder>
+    <GameFolder Condition="'$(GameFolder)' == '' And Exists('C:\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord')">C:\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord</GameFolder>
+    <UseLocalGameDlls>false</UseLocalGameDlls>
+    <UseLocalGameDlls Condition="'$(GITHUB_ACTIONS)' != 'true' And '$(GameFolder)' != '' And Exists('$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.Core.dll')">true</UseLocalGameDlls>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Configurations>Debug;Update;Hotfix</Configurations>
     <SubModuleTemplatePath>$(ProjectDir)..\JGUM\SubModule.xml</SubModuleTemplatePath>
     <MSBuildEnableWorkloadResolver>false</MSBuildEnableWorkloadResolver>
+    <ModuleFolder Condition="'$(UseLocalGameDlls)' == 'true'">$(GameFolder)\Modules\JGUM</ModuleFolder>
+    <ModuleFolder Condition="'$(UseLocalGameDlls)' != 'true'">$(ProjectDir)..\artifacts\JGUM</ModuleFolder>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\JGUM\JGUM.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(UseLocalGameDlls)' == 'true'">
     <Reference Include="TaleWorlds.Core">
-      <HintPath>C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.Core.dll</HintPath>
+      <HintPath Condition="Exists('C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.Core.dll')">C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.Core.dll</HintPath>
+      <HintPath Condition="!Exists('C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.Core.dll')">$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.MountAndBlade">
-      <HintPath>C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.MountAndBlade.dll</HintPath>
+      <HintPath Condition="Exists('C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.MountAndBlade.dll')">C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.MountAndBlade.dll</HintPath>
+      <HintPath Condition="!Exists('C:\Users\meteh\RiderProjects\BannerlordCodeBase.old\TaleWorlds.MountAndBlade.dll')">$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="MCMv5">
@@ -39,19 +46,20 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup Condition="'$(UseLocalGameDlls)' != 'true'">
+    <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="1.4.6.115628" PrivateAssets="all" IncludeAssets="compile" />
+    <PackageReference Include="Bannerlord.MCM" Version="5.13.1" PrivateAssets="all" IncludeAssets="compile" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" PrivateAssets="all" IncludeAssets="compile" />
+  </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <PropertyGroup>
-      <ModuleFolder>$(GameFolder)\Modules\JGUM</ModuleFolder>
-    </PropertyGroup>
     <ItemGroup>
       <BridgeBin Include="$(TargetDir)$(ProjectName).dll" />
     </ItemGroup>
     <Copy SourceFiles="@(BridgeBin)" DestinationFolder="$(ModuleFolder)\bin\Win64_Shipping_Client" />
     <Copy SourceFiles="@(BridgeBin)" DestinationFolder="$(ModuleFolder)\bin\Gaming.Desktop.x64_Shipping_Client" />
 
-    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;$DesktopPath = [Environment]::GetFolderPath('Desktop'); Compress-Archive -Path '$(ModuleFolder)' -DestinationPath ($DesktopPath + '\JGUM.zip') -Force&quot;" />
+    <Exec Condition="'$(UseLocalGameDlls)' == 'true'" Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;$DesktopPath = [Environment]::GetFolderPath('Desktop'); Compress-Archive -Path '$(ModuleFolder)' -DestinationPath ($DesktopPath + '\JGUM.zip') -Force&quot;" />
   </Target>
 
 </Project>
-

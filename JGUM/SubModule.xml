@@ -2,7 +2,7 @@
 <Module>
   <Name value="Just Give Up Man!" />
   <Id value="JGUM" />
-  <Version value="v2.4.3.39" />
+  <Version value="v2.4.4.40" />
   <DefaultModule value="false" />
   <ModuleCategory value="Singleplayer" />
   <ModuleType value="Community" />
@@ -24,11 +24,18 @@
     <DependedModule Id="Sandbox" DependentVersion="v1.3.0" />
     <DependedModule Id="CustomBattle" DependentVersion="v1.3.0" />
     <DependedModule Id="StoryMode" DependentVersion="v1.3.0" />
-    <DependedModule Id="Bannerlord.Harmony" Optional="true" />
-    <DependedModule Id="Bannerlord.ButterLib" Optional="true" />
-    <DependedModule Id="Bannerlord.UIExtenderEx" Optional="true" />
-    <DependedModule Id="Bannerlord.MBOptionScreen" Optional="true" />
   </DependedModules>
+  <DependedModuleMetadatas>
+    <DependedModuleMetadata id="Native" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="StoryMode" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="Bannerlord.Harmony" order="LoadBeforeThis" optional="true" />
+    <DependedModuleMetadata id="Bannerlord.ButterLib" order="LoadBeforeThis" optional="true" />
+    <DependedModuleMetadata id="Bannerlord.UIExtenderEx" order="LoadBeforeThis" optional="true" />
+    <DependedModuleMetadata id="Bannerlord.MBOptionScreen" order="LoadBeforeThis" optional="true" />
+  </DependedModuleMetadatas>
   <SubModules>
     <SubModule>
       <Name value="JGUM" />

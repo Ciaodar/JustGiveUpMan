@@ -1,0 +1,191 @@
+name: Build & Publish JGUM 1.4.6nOlder to Nexus Mods
+
+on:
+  push:
+    branches:
+      - '1.3.x-1.4.6'
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+  workflow_dispatch:
+    inputs:
+      build_configuration:
+        description: 'Build Configuration (Hotfix or Update)'
+        required: true
+        default: 'Hotfix'
+        type: choice
+        options:
+          - Hotfix
+          - Update
+          - Debug
+      bump_version:
+        description: 'Increment version in SubModule.xml before build?'
+        required: true
+        default: false
+        type: boolean
+      changelog:
+        description: 'Custom Changelog (leave empty to use latest commit message)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-and-publish:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Determine Build Configuration
+        id: config
+        shell: pwsh
+        run: |
+          $cfg = if ("${{ github.event_name }}" -eq "workflow_dispatch") { "${{ inputs.build_configuration }}" } else { "Hotfix" }
+          $skipBump = if ("${{ github.event_name }}" -eq "workflow_dispatch" -and "${{ inputs.bump_version }}" -eq "true") { "false" } else { "true" }
+          "configuration=$cfg" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          "skip_bump=$skipBump" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: Restore & Build Solution
+        shell: pwsh
+        run: |
+          dotnet build JustGiveUpMan.sln -c ${{ steps.config.outputs.configuration }} /p:SkipVersionBump=${{ steps.config.outputs.skip_bump }}
+
+      - name: Commit Version Bump (if triggered manually)
+        if: steps.config.outputs.skip_bump == 'false'
+        shell: pwsh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add JGUM/SubModule.xml
+          git diff --staged --quiet || (git commit -m "chore: bump version [skip ci]" && git push)
+
+      - name: Verify Module Output & Package ZIP
+        id: package
+        shell: pwsh
+        env:
+          INPUT_CHANGELOG: ${{ inputs.changelog }}
+        run: |
+          $moduleDir = "artifacts/JGUM"
+          $requiredFiles = @(
+            "$moduleDir/SubModule.xml",
+            "$moduleDir/bin/Win64_Shipping_Client/JGUM.dll",
+            "$moduleDir/bin/Win64_Shipping_Client/JGUM.MCMBridge.dll",
+            "$moduleDir/bin/Gaming.Desktop.x64_Shipping_Client/JGUM.dll",
+            "$moduleDir/bin/Gaming.Desktop.x64_Shipping_Client/JGUM.MCMBridge.dll"
+          )
+
+          foreach ($f in $requiredFiles) {
+            if (-not (Test-Path $f)) {
+              Write-Error "CRITICAL: Required file missing from build output: $f"
+              exit 1
+            }
+          }
+
+          [xml]$xml = Get-Content "$moduleDir/SubModule.xml"
+          $version = $xml.Module.Version.value
+          $cleanVersion = $version.TrimStart('v')
+          $zipName = "JGUM 1.4.6nOlder.zip"
+
+          Compress-Archive -Path $moduleDir -DestinationPath $zipName -Force
+          Write-Host "Successfully packaged $zipName for version $version"
+
+          $changelog = $env:INPUT_CHANGELOG
+          if ([string]::IsNullOrWhiteSpace($changelog)) {
+            $latestTag = git describe --tags --abbrev=0 2>$null
+            if ($latestTag) {
+              $commits = git log "$latestTag..HEAD" --pretty=format:"- %s"
+              if (-not [string]::IsNullOrWhiteSpace($commits)) {
+                $changelog = $commits
+              }
+            }
+            if ([string]::IsNullOrWhiteSpace($changelog)) {
+              $changelog = (git log -1 --pretty=%B).Trim()
+            }
+          }
+
+          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          "clean_version=$cleanVersion" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          "zip_name=$zipName" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+          $eof = "EOF_" + [Guid]::NewGuid().ToString("N")
+          "changelog<<$eof" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          $changelog | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          "$eof" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: Create or Update GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: "${{ steps.package.outputs.version }}-1.4.6"
+          name: "Just Give Up Man! ${{ steps.package.outputs.version }} (1.4.6 and older)"
+          body: ${{ steps.package.outputs.changelog }}
+          files: ${{ steps.package.outputs.zip_name }}
+          draft: false
+          prerelease: false
+          generate_release_notes: false
+
+      - name: Resolve Nexus Mods v3 UID and File Group ID
+        id: nexus_info
+        shell: pwsh
+        env:
+          NEXUS_API_KEY: ${{ secrets.NEXUSMODS_API_KEY || secrets.NEXUS_API_KEY || secrets.NEXUSMODS_APIKEY }}
+        run: |
+          $modId = "${{ vars.NEXUSMODS_MOD_ID || '10709' }}"
+          $apiKey = $env:NEXUS_API_KEY
+          $fallbackFileId = "${{ vars.NEXUSMODS_FILE_ID_146 || '7734735' }}"
+          
+          if ([string]::IsNullOrWhiteSpace($apiKey)) {
+            Write-Error "CRITICAL: NEXUSMODS_API_KEY secret is not set or empty in GitHub repository settings!"
+            exit 1
+          }
+
+          try {
+            $res = Invoke-RestMethod -Uri "https://api.nexusmods.com/v3/games/mountandblade2bannerlord/mods/$modId" -Headers @{ "apikey" = $apiKey; "Accept" = "application/json" }
+            $uid = $res.data.id
+            Write-Host "Resolved Nexus Mods v3 UID: $uid"
+            "mod_uid=$uid" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+            $filesRes = Invoke-RestMethod -Uri "https://api.nexusmods.com/v3/mods/$uid/files" -Headers @{ "apikey" = $apiKey; "Accept" = "application/json" }
+            $olderFile = $filesRes.data.mod_files | Where-Object { $_.name -like "*1.4.6*" -and $_.is_active } | Select-Object -First 1
+            $fileGroupId = if ($olderFile) { $olderFile.id } else { $fallbackFileId }
+            Write-Host "Resolved Nexus Mods FileGroupId: $fileGroupId ($($olderFile.name))"
+            "file_group_id=$fileGroupId" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          } catch {
+            Write-Warning "Resolution failed: $_. Using fallbacks: UID=$modId, FileGroupId=$fallbackFileId"
+            "mod_uid=$modId" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+            "file_group_id=$fallbackFileId" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          }
+
+      - name: Upload to Nexus Mods
+        uses: Nexus-Mods/upload-action@v1.0.0-beta.11
+        with:
+          api_key: ${{ secrets.NEXUSMODS_API_KEY || secrets.NEXUS_API_KEY || secrets.NEXUSMODS_APIKEY }}
+          mod_id: ${{ steps.nexus_info.outputs.mod_uid }}
+          file_id: ${{ steps.nexus_info.outputs.file_group_id }}
+          filename: ${{ steps.package.outputs.zip_name }}
+          display_name: "JGUM 1.4.6nOlder"
+          version: ${{ steps.package.outputs.version }}
+          category: 'main'
+          update_mod_version: 'false'
+          primary_mod_manager_download: 'false'
+          archive_existing_version: 'true'
+          changelog: ${{ steps.package.outputs.changelog }}
+          description: |
+            Built On 1.4.6, works for 1.4.6 and older (>1.3.X)
+
+            This is a Standalone version of JGUM! no dependency to any libraries other than native game modules.
+            Has a bridge included for MCM.
