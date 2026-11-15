@@ -49,6 +49,7 @@ namespace JGUM.Calculators
                 return true;
 
             float powerRatio = attackerPower / defenderPower;
+            bool isPlayerBesieger = PartyBase.MainParty != null && siegeEvent.BesiegerCamp.HasInvolvedPartyForEventType(PartyBase.MainParty);
 
             // Lord count check:
             // 1. Count lords with MobileParty.
@@ -63,6 +64,11 @@ namespace JGUM.Calculators
             // Calculate trait effects
             float traitEffect = 0f;
 
+            if (isPlayerBesieger && settlement.OwnerClan?.HasBloodFeudWithPlayer == true)
+            {
+                traitEffect -= 1.5f;
+            }
+
             // Player's Mercy trait
             var player = Hero.MainHero;
             traitEffect += (player.GetTraitLevel(DefaultTraits.Mercy) / 10f) * (JgumSettingsManager.PlayerMercyMultiplier / 100f); // If Mercy/Cruelty is negative, it has negative effect.
@@ -70,6 +76,11 @@ namespace JGUM.Calculators
             // Traits of lords in the fortress
             foreach (var lord in defendingLords)
             {
+                if (isPlayerBesieger && lord.Clan?.HasBloodFeudWithPlayer == true)
+                {
+                    traitEffect -= 1.0f;
+                }
+
                 traitEffect += (lord.GetTraitLevel(DefaultTraits.Calculating) / 20f) * (JgumSettingsManager.LordCalculatingMultiplier / 100f); // Calculating +
                 traitEffect -= (lord.GetTraitLevel(DefaultTraits.Valor) / 10f) * (JgumSettingsManager.LordValorMultiplier / 100f); // Valor -
                 traitEffect += (lord.GetTraitLevel(DefaultTraits.Mercy) / 20f) * (JgumSettingsManager.LordMercyMultiplier / 100f); // Mercy +

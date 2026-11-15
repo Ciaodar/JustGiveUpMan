@@ -208,6 +208,7 @@ namespace JGUM.AIBehaviors
                 if (!party.IsLordParty) continue;
                 if (party.CurrentSettlement != null) continue;
                 if (involvedParties.Contains(party.Party)) continue;
+                if (party.IsCurrentlyAtSea != mapEvent.IsNavalMapEvent) continue;
 
                 float dist = party.Position.Distance(mapEvent.Position);
                 if (dist <= radius)

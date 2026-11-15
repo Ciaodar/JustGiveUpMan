@@ -31,9 +31,15 @@ namespace JGUM.Calculators
                 .Distinct()
                 .ToList() ?? new List<Hero>();
 
+            if (uniqueEnemyLeaders.Any() && uniqueEnemyLeaders.All(h => h.Clan?.HasBloodFeudWithPlayer == true))
+                return false;
+
             float traitEffect = 0f;
             if (uniqueEnemyLeaders.Any())
             {
+                int bloodFeudCount = uniqueEnemyLeaders.Count(h => h.Clan?.HasBloodFeudWithPlayer == true);
+                traitEffect -= bloodFeudCount * 1.5f;
+
                 // Use average enemy leader traits to keep scaling stable in multi-lord encounters.
                 float avgValor = (float)uniqueEnemyLeaders.Average(h => h.GetTraitLevel(DefaultTraits.Valor));
                 float avgHonor = (float)uniqueEnemyLeaders.Average(h => h.GetTraitLevel(DefaultTraits.Honor));

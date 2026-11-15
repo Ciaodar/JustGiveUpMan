@@ -44,10 +44,10 @@ namespace JGUM.AIBehaviors
         {
             if (!JgumSettingsManager.EnableAiVsAiSiegeSurrender) return;
 
-            if (settlement?.SiegeEvent == null || !settlement.IsUnderSiege) return;
+            if (settlement?.SiegeEvent?.BesiegerCamp == null || !settlement.IsUnderSiege) return;
 
             // Do not trigger surrender if an assault (MapEvent) is actively ongoing to prevent simulation crashes
-            if (settlement.Party?.MapEvent != null) return;
+            if (settlement.Party?.MapEvent != null || settlement.SiegeEvent?.BesiegerCamp?.LeaderParty?.MapEvent != null) return;
 
             // Check if player is involved (we only want AI vs AI)
             if (IsPlayerInvolvedInSiege(settlement)) return;
@@ -56,6 +56,7 @@ namespace JGUM.AIBehaviors
             if (_dailySurrenderCount >= JgumSettingsManager.AiVsAiSiegeDailySurrenderLimit) return;
 
             var siegeEvent = settlement.SiegeEvent;
+            if (siegeEvent?.BesiegerCamp == null) return;
             var attackers = siegeEvent.BesiegerCamp.GetInvolvedPartiesForEventType().ToList();
             var defenders = settlement.Parties.Select(p => p.Party).ToList();
             

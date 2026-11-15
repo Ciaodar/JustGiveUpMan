@@ -334,6 +334,11 @@ namespace JGUM.Behaviors.SiegeNegotiationBehavior
             int requiredSuccessScore = Math.Min(NegotiationCalculator.GetRequiredSuccessScore(_activeSettlement), MaxPersuasionRounds);
             _activeRequiredRounds = requiredSuccessScore;
             _activeBaseStrength = NegotiationCalculator.GetBaseStrengthFromPowerRatio(powerRatio);
+            if (_activeSettlement != null && (_activeSettlement.OwnerClan?.HasBloodFeudWithPlayer == true ||
+                FindSettlementRepresentative(_activeSettlement)?.HeroObject?.Clan?.HasBloodFeudWithPlayer == true))
+            {
+                _activeBaseStrength = NegotiationCalculator.ShiftStrength(_activeBaseStrength, -1);
+            }
 
             int carryRounds = 0;
             if (!string.IsNullOrEmpty(_activeSettlementKey) && _savedSuccessfulRoundsBySettlement.TryGetValue(_activeSettlementKey!, out int savedRounds))

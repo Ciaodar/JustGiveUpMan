@@ -120,6 +120,9 @@ namespace JGUM.Behaviors
             if (conversationHero == null)
                 return false;
 
+            if (conversationHero.Clan?.HasBloodFeudWithPlayer == true)
+                return false;
+
             var enemyParty = conversationHero.PartyBelongedTo?.Party;
             var mainParty = MobileParty.MainParty?.Party;
 

@@ -165,7 +165,7 @@ namespace JGUM.Behaviors
             if (!settlement.IsUnderSiege || SurrenderDialogContext.IsInSurrenderConversation)
                 return;
 
-            if (settlement.Party?.MapEvent != null)
+            if (settlement.Party?.MapEvent != null || settlement.SiegeEvent?.BesiegerCamp?.LeaderParty?.MapEvent != null)
                 return;
 
             if (!JgumSettingsManager.EnableSiegeSurrender && !JgumSettingsManager.EnableSiegeStarvationSallyOut)
@@ -432,12 +432,13 @@ namespace JGUM.Behaviors
                     .Where(p => p?.Party != null && p.LeaderHero != null && p.LeaderHero.IsLord)
                     .Where(p => p.MapFaction != null && p.MapFaction == settlementFaction)
                     .Where(p => p.CurrentSettlement == null || p.CurrentSettlement == settlement)
+                    .Where(p => p.IsCurrentlyAtSea == playerParty.IsCurrentlyAtSea)
                     .Where(p => (p.Position - settlementPosition).Length <= detectionRange)
                     .ToList();
 
                 foreach (var party in nearbyDefenders)
                 {
-                    if (party != playerParty && party.CurrentSettlement == null)
+                    if (party != playerParty && party.CurrentSettlement == null && party.IsCurrentlyAtSea == playerParty.IsCurrentlyAtSea)
                     {
                         party.Position = playerParty.Position;
                     }

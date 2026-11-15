@@ -20,6 +20,9 @@ namespace JGUM.Calculators
         private const float EngineRatioBaseline = 1f;
         private const float BaseWallDamageWeight = 1.0f;
 
+        private const float ActiveNavalBlockadePressureBonus = 0.25f;
+        private const float UnblockadedPortPressureRelief = -0.15f;
+
         public static float GetSiegePressureModifier(Settlement? settlement)
         {
             var siegeEvent = settlement?.SiegeEvent;
@@ -31,7 +34,15 @@ namespace JGUM.Calculators
             float enginePowerRatio = (attackerEnginePressure + EngineRatioBaseline) / (defenderEnginePressure + EngineRatioBaseline);
             float enginePowerRatioEffect = (enginePowerRatio - 1f) * (JgumSettingsManager.SiegeEnginePowerRatioMultiplier / 100f);
 
-            return enginePowerRatioEffect + GetWallDamagePressure(settlement);
+            return enginePowerRatioEffect + GetWallDamagePressure(settlement) + GetNavalBlockadePressure(settlement);
+        }
+
+        private static float GetNavalBlockadePressure(Settlement? settlement)
+        {
+            if (settlement == null || !settlement.HasPort || settlement.SiegeEvent == null)
+                return 0f;
+
+            return settlement.SiegeEvent.IsBlockadeActive ? ActiveNavalBlockadePressureBonus : UnblockadedPortPressureRelief;
         }
 
         private static float GetSideSiegeEnginePressure(TaleWorlds.CampaignSystem.Siege.SiegeEvent.SiegeEnginesContainer? siegeEngines, bool isDefenderSide)

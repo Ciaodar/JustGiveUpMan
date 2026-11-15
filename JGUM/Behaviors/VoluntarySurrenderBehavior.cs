@@ -108,6 +108,11 @@ namespace JGUM.Behaviors
             int mercyLevel = besiegerLeader.GetTraitLevel(DefaultTraits.Mercy);
             int acceptanceChance = MBMath.ClampInt(Config.JgumSettingsManager.VoluntarySurrenderBaseChance + (mercyLevel * 30), 0, 100);
 
+            if (besiegerLeader.Clan?.HasBloodFeudWithPlayer == true)
+            {
+                acceptanceChance = 0;
+            }
+
             bool isAccepted = MBRandom.RandomInt(100) < acceptanceChance;
 
             if (isAccepted)

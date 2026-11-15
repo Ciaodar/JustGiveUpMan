@@ -131,7 +131,11 @@ namespace JGUM.Behaviors.SiegeNegotiationBehavior
                 return;
 
             float powerRatio = NegotiationCalculator.GetPowerRatio(settlement);
-            bool approved = powerRatio >= 1f;
+            CharacterObject? rep = FindSettlementRepresentative(settlement);
+            bool hasBloodFeud = settlement.OwnerClan?.HasBloodFeudWithPlayer == true ||
+                                rep?.HeroObject?.Clan?.HasBloodFeudWithPlayer == true;
+            float requiredApprovalRatio = hasBloodFeud ? 1.5f : 1f;
+            bool approved = powerRatio >= requiredApprovalRatio;
 
             string title = StringCalculator.GetString("jgum_siege_negotiation_inquiry_title", "A Raven Arrives");
 

@@ -49,7 +49,7 @@ namespace JGUM.Behaviors
                 return;
             }
 
-            if (settlement.Party?.MapEvent != null)
+            if (settlement.Party?.MapEvent != null || settlement.SiegeEvent?.BesiegerCamp?.LeaderParty?.MapEvent != null)
                 return;
 
             if (!_siegeStartBySettlement.ContainsKey(key))
@@ -68,6 +68,9 @@ namespace JGUM.Behaviors
             // Check besieger leader exists and has sufficient Trade skill
             Hero? besiegerLeader = settlement.SiegeEvent?.BesiegerCamp?.LeaderParty?.LeaderHero;
             if (besiegerLeader == null)
+                return;
+
+            if (besiegerLeader.Clan?.HasBloodFeudWithPlayer == true)
                 return;
 
             int tradeSkill = besiegerLeader.GetSkillValue(DefaultSkills.Trade);
