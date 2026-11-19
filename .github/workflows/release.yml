@@ -160,7 +160,7 @@ jobs:
             "mod_uid=$uid" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
             $filesRes = Invoke-RestMethod -Uri "https://api.nexusmods.com/v3/mods/$uid/files" -Headers @{ "apikey" = $apiKey; "Accept" = "application/json" }
-            $olderFile = $filesRes.data.mod_files | Where-Object { $_.name -like "*1.4.6*" -and $_.is_active } | Select-Object -First 1
+            $olderFile = $filesRes.data.mod_files | Where-Object { $_.id -eq $fallbackFileId -or ($_.name -like "*1.4.6*" -and $_.is_active) } | Select-Object -First 1
             $fileGroupId = if ($olderFile) { $olderFile.id } else { $fallbackFileId }
             Write-Host "Resolved Nexus Mods FileGroupId: $fileGroupId ($($olderFile.name))"
             "file_group_id=$fileGroupId" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
@@ -177,7 +177,7 @@ jobs:
           mod_id: ${{ steps.nexus_info.outputs.mod_uid }}
           file_id: ${{ steps.nexus_info.outputs.file_group_id }}
           filename: ${{ steps.package.outputs.zip_name }}
-          display_name: "JGUM 1.4.6nOlder"
+          display_name: "JGUM for 1.4.6nOlder"
           version: ${{ steps.package.outputs.version }}
           category: 'main'
           update_mod_version: 'false'

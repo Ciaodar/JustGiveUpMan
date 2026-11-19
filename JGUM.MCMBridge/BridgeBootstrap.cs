@@ -6,15 +6,23 @@ namespace JGUM.MCMBridge
 {
     public static class BridgeBootstrap
     {
+        private static JgumMcmSettings? _subscribedInstance;
+
         public static void TryRegister()
         {
-            var mcmSettings = JgumMcmSettings.Instance;
-            if (mcmSettings != null)
-            {
-                mcmSettings.PropertyChanged += OnMcmSettingsChanged;
-            }
-
             JgumSettingsManager.RegisterExternalSettingsProvider(BuildModelFromMcm);
+
+            var mcmSettings = JgumMcmSettings.Instance;
+            if (mcmSettings != null && !ReferenceEquals(_subscribedInstance, mcmSettings))
+            {
+                if (_subscribedInstance != null)
+                {
+                    _subscribedInstance.PropertyChanged -= OnMcmSettingsChanged;
+                }
+
+                mcmSettings.PropertyChanged += OnMcmSettingsChanged;
+                _subscribedInstance = mcmSettings;
+            }
         }
 
         private static void OnMcmSettingsChanged(object sender, PropertyChangedEventArgs e)
