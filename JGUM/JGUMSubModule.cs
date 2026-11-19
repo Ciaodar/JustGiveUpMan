@@ -13,6 +13,10 @@ namespace JGUM
 {
     public class JGUMSubModule : MBSubModuleBase
     {
+        private static bool _mcmResolverRegistered;
+        private static bool _mcmLoadHookRegistered;
+        private static bool _isActivatingMcmBridge;
+
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
@@ -53,10 +57,31 @@ namespace JGUM
 
         private static void TryActivateOptionalMcmBridge()
         {
+            if (_isActivatingMcmBridge)
+                return;
+
+            _isActivatingMcmBridge = true;
             try
             {
-                // Require MCM base assembly at runtime. If unavailable, do nothing.
-                Assembly.Load("MCMv5");
+                // Require MCM base assembly at runtime. If unavailable yet, hook load events and probe once.
+                Assembly? mcmAssembly = FindLoadedAssembly("MCMv5");
+                if (mcmAssembly == null)
+                {
+                    EnsureMcmAssemblyLoadHook();
+                    try
+                    {
+                        mcmAssembly = Assembly.Load("MCMv5");
+                    }
+                    catch
+                    {
+                        return;
+                    }
+                }
+
+                if (mcmAssembly == null)
+                    return;
+
+                EnsureMcmAssemblyResolver();
 
                 string? gameRoot = BasePath.Name;
                 if (string.IsNullOrWhiteSpace(gameRoot))
@@ -71,19 +96,79 @@ namespace JGUM
                     return;
 
                 string bridgePath = Path.Combine(binDir, "JGUM.MCMBridge.dll");
-
-
                 if (!File.Exists(bridgePath))
                     return;
 
-                Assembly bridgeAssembly = AppDomain.CurrentDomain
-                                              .GetAssemblies()
-                                              .FirstOrDefault(a => string.Equals(a.GetName().Name, "JGUM.MCMBridge", StringComparison.OrdinalIgnoreCase))
+                Assembly bridgeAssembly = FindLoadedAssembly("JGUM.MCMBridge")
                                           ?? Assembly.LoadFrom(bridgePath);
 
                 Type? bootstrapType = bridgeAssembly.GetType("JGUM.MCMBridge.BridgeBootstrap");
                 MethodInfo? tryRegister = bootstrapType?.GetMethod("TryRegister", BindingFlags.Public | BindingFlags.Static);
                 tryRegister?.Invoke(null, null);
+            }
+            catch
+            {
+                // Optional bridge should never crash core startup.
+            }
+            finally
+            {
+                _isActivatingMcmBridge = false;
+            }
+        }
+
+        private static Assembly? FindLoadedAssembly(string shortName)
+        {
+            return AppDomain.CurrentDomain
+                .GetAssemblies()
+                .FirstOrDefault(a => string.Equals(a.GetName().Name, shortName, StringComparison.OrdinalIgnoreCase));
+        }
+
+        private static void EnsureMcmAssemblyResolver()
+        {
+            if (_mcmResolverRegistered)
+                return;
+
+            _mcmResolverRegistered = true;
+            AppDomain.CurrentDomain.AssemblyResolve += OnMcmAssemblyResolve;
+        }
+
+        private static Assembly? OnMcmAssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(args?.Name))
+                    return null;
+
+                string? requestedName = new AssemblyName(args!.Name).Name;
+                if (string.Equals(requestedName, "MCMv5", StringComparison.OrdinalIgnoreCase))
+                    return FindLoadedAssembly("MCMv5");
+            }
+            catch
+            {
+                // Ignore malformed assembly resolve requests.
+            }
+
+            return null;
+        }
+
+        private static void EnsureMcmAssemblyLoadHook()
+        {
+            if (_mcmLoadHookRegistered)
+                return;
+
+            _mcmLoadHookRegistered = true;
+            AppDomain.CurrentDomain.AssemblyLoad += OnMcmAssemblyLoaded;
+        }
+
+        private static void OnMcmAssemblyLoaded(object sender, AssemblyLoadEventArgs args)
+        {
+            try
+            {
+                if (string.Equals(args.LoadedAssembly?.GetName().Name, "MCMv5", StringComparison.OrdinalIgnoreCase))
+                {
+                    AppDomain.CurrentDomain.AssemblyLoad -= OnMcmAssemblyLoaded;
+                    TryActivateOptionalMcmBridge();
+                }
             }
             catch
             {
