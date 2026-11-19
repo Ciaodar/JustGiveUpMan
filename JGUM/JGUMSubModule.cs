@@ -25,7 +25,10 @@ namespace JGUM
         {
             base.OnBeforeInitialModuleScreenSetAsRoot();
 
-            // Initialize core JSON settings first.
+            // Ensure MCM bridge is activated and subscribed after MCM builds its service container.
+            TryActivateOptionalMcmBridge();
+
+            // Initialize settings (will use MCM if bridge was successful, else JSON).
             JgumSettingsManager.Initialize();
         }
 
